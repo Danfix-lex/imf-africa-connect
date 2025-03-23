@@ -1,6 +1,5 @@
-
 import React, { createContext, useState, useContext, useEffect } from "react";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "@/utils/toast";
 
 type User = {
   id: string;
@@ -25,7 +24,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user data exists in localStorage
     const storedUser = localStorage.getItem("imf_user");
     if (storedUser) {
       try {
@@ -41,10 +39,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Mock login - in a real app, this would be an API call
       if (email === "admin@imfafrica.org" && password === "password") {
         const adminUser = {
           id: "1",
@@ -79,10 +75,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const register = async (name: string, email: string, password: string) => {
     setIsLoading(true);
     try {
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Mock registration - in a real app, this would be an API call
       const newUser = {
         id: Math.random().toString(36).substring(2, 9),
         name,

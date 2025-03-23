@@ -15,6 +15,7 @@ interface ProgramCardProps {
   location: string;
   speaker: string;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 const ProgramCard: React.FC<ProgramCardProps> = ({

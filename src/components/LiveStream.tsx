@@ -16,6 +16,7 @@ interface LiveStreamProps {
   isLive?: boolean;
   className?: string;
   isDetailed?: boolean;
+  style?: React.CSSProperties;
 }
 
 const LiveStream: React.FC<LiveStreamProps> = ({

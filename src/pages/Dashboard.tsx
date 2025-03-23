@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
@@ -11,11 +10,29 @@ import { Badge } from "@/components/ui/badge";
 import LiveStream from "@/components/LiveStream";
 import ProgramCard from "@/components/ProgramCard";
 
+const UserPlus = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+    <circle cx="9" cy="7" r="4" />
+    <line x1="19" x2="19" y1="8" y2="14" />
+    <line x1="22" x2="16" y1="11" y2="11" />
+  </svg>
+);
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, isLoading } = useAuth();
   
-  // Redirect if not authenticated
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       navigate("/auth");
@@ -409,7 +426,6 @@ const Dashboard = () => {
   );
 };
 
-// Mock components for settings page
 const Label = ({ htmlFor, children }: { htmlFor: string, children: React.ReactNode }) => (
   <label htmlFor={htmlFor} className="text-sm font-medium">{children}</label>
 );
