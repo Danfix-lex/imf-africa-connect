@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import LiveStreams from "./pages/LiveStreams";
 import Programs from "./pages/Programs";
+import Leadership from "./pages/Leadership";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/live-streams" element={<LiveStreams />} />
             <Route path="/programs" element={<Programs />} />
+            <Route path="/leadership" element={<Leadership />} />
             <Route path="/dashboard" element={<Dashboard />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
