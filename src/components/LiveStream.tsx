@@ -30,6 +30,7 @@ const LiveStream: React.FC<LiveStreamProps> = ({
   isLive = false,
   className,
   isDetailed = false,
+  style,
 }) => {
   const [playing, setPlaying] = useState(false);
   
@@ -50,11 +51,14 @@ const LiveStream: React.FC<LiveStreamProps> = ({
   };
   
   return (
-    <div className={cn(
-      "rounded-lg overflow-hidden border border-border transition-all duration-300 hover:shadow-lg bg-card",
-      isDetailed ? "flex flex-col" : "h-full",
-      className
-    )}>
+    <div 
+      className={cn(
+        "rounded-lg overflow-hidden border border-border transition-all duration-300 hover:shadow-lg bg-card",
+        isDetailed ? "flex flex-col" : "h-full",
+        className
+      )}
+      style={style}
+    >
       <div className="relative">
         {/* Thumbnail or Video */}
         {playing && isLive ? (

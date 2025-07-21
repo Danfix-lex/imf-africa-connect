@@ -28,6 +28,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
   location,
   speaker,
   className,
+  style,
 }) => {
   // Format date
   const formatDate = (dateString: string) => {
@@ -41,10 +42,13 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
   };
   
   return (
-    <div className={cn(
-      "overflow-hidden rounded-lg border border-border bg-card hover:shadow-lg transition-all duration-300",
-      className
-    )}>
+    <div 
+      className={cn(
+        "overflow-hidden rounded-lg border border-border bg-card hover:shadow-lg transition-all duration-300",
+        className
+      )}
+      style={style}
+    >
       <div className="aspect-video overflow-hidden">
         <img 
           src={imageUrl} 

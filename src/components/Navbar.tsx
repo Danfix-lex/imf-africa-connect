@@ -84,7 +84,7 @@ const Navbar = () => {
                     <ChevronDown size={16} />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 animate-scale-in">
+                <DropdownMenuContent align="end" className="w-48 animate-scale-in z-50 bg-popover">
                   <DropdownMenuItem asChild>
                     <Link to="/dashboard" className="w-full cursor-pointer">Dashboard</Link>
                   </DropdownMenuItem>
