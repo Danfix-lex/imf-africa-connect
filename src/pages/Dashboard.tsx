@@ -11,12 +11,12 @@ import { Badge } from "@/components/ui/badge";
 import LiveStream from "@/components/LiveStream";
 import ProgramCard from "@/components/ProgramCard";
 
-// Custom UserPlus icon component that accepts className prop
-const UserPlus = ({ className }: { className?: string }) => (
+// Custom UserPlus icon component that accepts className and size props
+const UserPlus = ({ className, size = 24 }: { className?: string; size?: number }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
+    width={size}
+    height={size}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
