@@ -1,9 +1,9 @@
-
 import React, { useState } from "react";
 import { Play, Users, Calendar, Clock, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 interface LiveStreamProps {
   id: string;
@@ -51,13 +51,20 @@ const LiveStream: React.FC<LiveStreamProps> = ({
   };
   
   return (
-    <div 
+    <motion.div 
       className={cn(
         "rounded-lg overflow-hidden border border-border transition-all duration-300 hover:shadow-lg bg-card",
         isDetailed ? "flex flex-col" : "h-full",
         className
       )}
       style={style}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      whileHover={{ 
+        y: -5,
+        transition: { type: "spring", stiffness: 300 }
+      }}
     >
       <div className="relative">
         {/* Thumbnail or Video */}
@@ -73,52 +80,89 @@ const LiveStream: React.FC<LiveStreamProps> = ({
           </div>
         ) : (
           <div className="aspect-video w-full relative group">
-            <img
+            <motion.img
               src={thumbnailUrl}
               alt={title}
               className="w-full h-full object-cover"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.3 }}
             />
-            <div className="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/40 transition-all">
+            <motion.div 
+              className="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/40 transition-all"
+              whileHover={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+            >
               {isLive ? (
-                <Button 
-                  onClick={handlePlay}
-                  className="bg-primary/90 hover:bg-primary text-white rounded-full w-16 h-16 flex items-center justify-center"
+                <motion.div
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                 >
-                  <Play size={24} fill="white" />
-                </Button>
+                  <Button 
+                    onClick={handlePlay}
+                    className="bg-primary/90 hover:bg-primary text-white rounded-full w-16 h-16 flex items-center justify-center"
+                  >
+                    <Play size={24} fill="white" />
+                  </Button>
+                </motion.div>
               ) : (
-                <div className="bg-primary/90 text-white rounded-full w-16 h-16 flex items-center justify-center">
+                <motion.div 
+                  className="bg-primary/90 text-white rounded-full w-16 h-16 flex items-center justify-center"
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
                   <Calendar size={24} />
-                </div>
+                </motion.div>
               )}
-            </div>
+            </motion.div>
             
             {/* Live Badge */}
             {isLive && (
-              <Badge 
-                className="absolute top-2 left-2 bg-red-500 text-white font-medium animate-pulse flex items-center gap-1"
-                variant="default"
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 300, delay: 0.2 }}
               >
-                <span className="w-2 h-2 rounded-full bg-white inline-block"></span> LIVE
-              </Badge>
+                <Badge 
+                  className="absolute top-2 left-2 bg-red-500 text-white font-medium flex items-center gap-1"
+                  variant="default"
+                >
+                  <motion.span 
+                    className="w-2 h-2 rounded-full bg-white inline-block"
+                    animate={{ opacity: [1, 0.3, 1] }}
+                    transition={{ duration: 1, repeat: Infinity }}
+                  />
+                  LIVE
+                </Badge>
+              </motion.div>
             )}
             
             {/* Viewer Count Badge */}
             {isLive && (
-              <Badge 
-                className="absolute top-2 right-2 bg-black/70 text-white"
-                variant="outline"
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 }}
               >
-                <Users size={14} className="mr-1" />
-                {viewerCount.toLocaleString()}
-              </Badge>
+                <Badge 
+                  className="absolute top-2 right-2 bg-black/70 text-white"
+                  variant="outline"
+                >
+                  <Users size={14} className="mr-1" />
+                  {viewerCount.toLocaleString()}
+                </Badge>
+              </motion.div>
             )}
           </div>
         )}
       </div>
       
       <div className="p-4 flex flex-col flex-grow">
-        <h3 className="text-lg font-semibold line-clamp-2 mb-2">{title}</h3>
+        <motion.h3 
+          className="text-lg font-semibold line-clamp-2 mb-2"
+          whileHover={{ x: 5 }}
+          transition={{ type: "spring", stiffness: 300 }}
+        >
+          {title}
+        </motion.h3>
         
         <p className={cn(
           "text-muted-foreground text-sm mb-4",
@@ -127,34 +171,49 @@ const LiveStream: React.FC<LiveStreamProps> = ({
           {description}
         </p>
         
-        <div className="mt-auto space-y-2">
+        <motion.div 
+          className="mt-auto space-y-2"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
           <div className="flex items-center text-sm text-muted-foreground">
             <Calendar size={16} className="mr-1" />
             <span>{formatDate(startTime)}</span>
           </div>
           
           {!isLive && (
-            <Button 
-              className="btn-primary w-full"
-              variant="outline"
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <Calendar size={16} className="mr-2" />
-              Add to Calendar
-            </Button>
+              <Button 
+                className="btn-primary w-full"
+                variant="outline"
+              >
+                <Calendar size={16} className="mr-2" />
+                Add to Calendar
+              </Button>
+            </motion.div>
           )}
           
           {isLive && !playing && (
-            <Button 
-              className="btn-primary w-full"
-              onClick={handlePlay}
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <Play size={16} className="mr-2" />
-              Watch Now
-            </Button>
+              <Button 
+                className="btn-primary w-full"
+                onClick={handlePlay}
+              >
+                <Play size={16} className="mr-2" />
+                Watch Now
+              </Button>
+            </motion.div>
           )}
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
