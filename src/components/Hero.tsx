@@ -25,8 +25,7 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
     hidden: { opacity: 0, y: 30 },
     visible: { 
       opacity: 1, 
-      y: 0,
-      transition: { duration: 0.6, ease: "easeOut" }
+      y: 0
     }
   };
 
@@ -52,7 +51,7 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
         }}
         initial={{ scale: 1.1 }}
         animate={{ scale: 1 }}
-        transition={{ duration: 1.5, ease: "easeOut" }}
+        transition={{ duration: 1.5 }}
       />
       
       <div className="container-custom relative z-10 pt-8 pb-16 md:py-16">
@@ -60,6 +59,7 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
           <motion.h1 
             className="font-bold text-4xl md:text-6xl mb-6 leading-tight"
             variants={itemVariants}
+            transition={{ duration: 0.6 }}
           >
             International Ministers Forum <motion.span 
               className="text-primary"
@@ -74,6 +74,7 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
           <motion.p 
             className="text-lg md:text-xl text-foreground/80 mb-8 md:mb-10 leading-relaxed"
             variants={itemVariants}
+            transition={{ duration: 0.6 }}
           >
             Connecting ministers across Africa for spiritual growth, 
             fellowship, and empowerment to transform communities.
@@ -82,6 +83,7 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
           <motion.div 
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
             variants={itemVariants}
+            transition={{ duration: 0.6 }}
           >
             <Link to="/live-streams">
               <motion.div
@@ -111,6 +113,7 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
           <motion.div 
             className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-8"
             variants={itemVariants}
+            transition={{ duration: 0.6 }}
           >
             {[
               { count: "1,000+", label: "Ministers" },
