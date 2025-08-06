@@ -159,7 +159,7 @@ const Dashboard = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Welcome, {user?.name}!</h1>
+            <h1 className="text-3xl font-bold mb-2">Welcome, {user?.email?.split('@')[0] || 'User'}!</h1>
             <p className="text-muted-foreground">
               {isAdmin 
                 ? "Manage your platform, users, and content from your admin dashboard." 
@@ -379,7 +379,7 @@ const Dashboard = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="name">Full Name</Label>
-                        <Input id="name" defaultValue={user?.name} className="mt-1" />
+                        <Input id="name" defaultValue={user?.user_metadata?.name || user?.email?.split('@')[0] || ''} className="mt-1" />
                       </div>
                       <div>
                         <Label htmlFor="email">Email Address</Label>

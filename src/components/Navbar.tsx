@@ -44,6 +44,7 @@ const Navbar = () => {
     { name: "Live Streams", path: "/live-streams" },
     { name: "Programs", path: "/programs" },
     { name: "Leadership", path: "/leadership" },
+    { name: "Dues Payment", path: "/dues-payment" },
   ];
 
   return (
@@ -81,7 +82,7 @@ const Navbar = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="flex items-center gap-1">
-                    {user?.name}
+                    {user?.email?.split('@')[0] || 'User'}
                     <ChevronDown size={16} />
                   </Button>
                 </DropdownMenuTrigger>

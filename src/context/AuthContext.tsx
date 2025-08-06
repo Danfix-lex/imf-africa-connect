@@ -1,117 +1,128 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
-import { toast } from "@/utils/toast";
-
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  role: "admin" | "user";
-};
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import type { User, Session, AuthChangeEvent } from '@supabase/supabase-js';
 
 type AuthContextType = {
   user: User | null;
+  session: Session | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string) => Promise<void>;
-  logout: () => void;
+  login: (email: string, password: string) => Promise<{ error?: string }>;
+  register: (name: string, email: string, password: string) => Promise<{ error?: string }>;
+  logout: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("imf_user");
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (error) {
-        console.error("Failed to parse stored user data:", error);
-        localStorage.removeItem("imf_user");
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event: AuthChangeEvent, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        setIsLoading(false);
+
+        // Create profile when user is authenticated for the first time
+        if (session?.user && !user) {
+          setTimeout(async () => {
+            const { data: existingProfile } = await supabase
+              .from('profiles')
+              .select('id')
+              .eq('user_id', session.user.id)
+              .single();
+              
+            if (!existingProfile) {
+              await supabase
+                .from('profiles')
+                .insert({
+                  user_id: session.user.id,
+                  display_name: session.user.user_metadata?.name || session.user.email?.split('@')[0]
+                });
+            }
+          }, 0);
+        }
       }
-    }
-    setIsLoading(false);
+    );
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setIsLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string): Promise<{ error?: string }> => {
     setIsLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      if (email === "admin@imfafrica.org" && password === "password") {
-        const adminUser = {
-          id: "1",
-          name: "Admin User",
-          email: "admin@imfafrica.org",
-          role: "admin" as const
-        };
-        setUser(adminUser);
-        localStorage.setItem("imf_user", JSON.stringify(adminUser));
-        toast.success("Logged in successfully!");
-      } else if (email === "user@imfafrica.org" && password === "password") {
-        const regularUser = {
-          id: "2",
-          name: "Regular User",
-          email: "user@imfafrica.org",
-          role: "user" as const
-        };
-        setUser(regularUser);
-        localStorage.setItem("imf_user", JSON.stringify(regularUser));
-        toast.success("Logged in successfully!");
-      } else {
-        toast.error("Invalid credentials");
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      toast.error("Login failed. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const register = async (name: string, email: string, password: string) => {
-    setIsLoading(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const newUser = {
-        id: Math.random().toString(36).substring(2, 9),
-        name,
+      const { error } = await supabase.auth.signInWithPassword({
         email,
-        role: "user" as const
-      };
-      
-      setUser(newUser);
-      localStorage.setItem("imf_user", JSON.stringify(newUser));
-      toast.success("Registration successful!");
-    } catch (error) {
-      console.error("Registration error:", error);
-      toast.error("Registration failed. Please try again.");
+        password
+      });
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      return {};
+    } catch (error: any) {
+      return { error: error.message };
     } finally {
       setIsLoading(false);
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem("imf_user");
-    toast.success("Logged out successfully");
+  const register = async (name: string, email: string, password: string): Promise<{ error?: string }> => {
+    setIsLoading(true);
+    try {
+      const redirectUrl = `${window.location.origin}/`;
+      
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
+            name: name
+          }
+        }
+      });
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      return {};
+    } catch (error: any) {
+      return { error: error.message };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const logout = async (): Promise<void> => {
+    await supabase.auth.signOut();
+  };
+
+  const value = {
+    user,
+    session,
+    isAuthenticated: !!user,
+    isLoading,
+    login,
+    register,
+    logout,
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isAuthenticated: !!user,
-        isLoading,
-        login,
-        register,
-        logout,
-      }}
-    >
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
@@ -120,7 +131,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };

@@ -399,17 +399,18 @@ const Index = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
             viewport={{ once: true }}
           >
-            <Link to="/auth">
-              <motion.div
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 300 }}
+            <motion.div
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <Button 
+                className="bg-white text-primary hover:bg-white/90 py-6 px-8 text-base font-medium w-full sm:w-auto shadow-xl hover:shadow-2xl transition-shadow"
+                onClick={() => window.open('https://imf-africa-pay-1.onrender.com', '_blank')}
               >
-                <Button className="bg-white text-primary hover:bg-white/90 py-6 px-8 text-base font-medium w-full sm:w-auto shadow-xl hover:shadow-2xl transition-shadow">
-                  Register Now
-                </Button>
-              </motion.div>
-            </Link>
+                Join Our Ministerial Community
+              </Button>
+            </motion.div>
             <motion.div
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
