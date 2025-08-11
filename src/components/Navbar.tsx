@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import ThemeToggle from "./ThemeToggle";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -78,6 +79,7 @@ const Navbar = () => {
           </div>
           
           <div className="flex items-center space-x-3">
+            <ThemeToggle />
             {isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -135,6 +137,9 @@ const Navbar = () => {
             </Link>
           ))}
           
+          <div className="py-2 px-4">
+            <ThemeToggle />
+          </div>
           {isAuthenticated ? (
             <>
               <Link 
