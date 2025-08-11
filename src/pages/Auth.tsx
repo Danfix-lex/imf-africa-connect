@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
+import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
+import { Separator } from "@/components/ui/separator";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -154,6 +156,8 @@ const Auth = () => {
             </TabsList>
             
             <TabsContent value="login">
+              <SocialAuthButtons mode="login" />
+              <div className="my-4"><Separator /></div>
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
@@ -206,6 +210,8 @@ const Auth = () => {
             </TabsContent>
             
             <TabsContent value="register">
+              <SocialAuthButtons mode="register" />
+              <div className="my-4"><Separator /></div>
               <form onSubmit={handleRegister} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Full Name</Label>
