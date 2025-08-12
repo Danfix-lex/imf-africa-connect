@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { ChevronRight, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,7 @@ interface HeroProps {
 }
 
 const Hero: React.FC<HeroProps> = ({ className }) => {
+  const { t } = useTranslation();
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -61,14 +63,7 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
             variants={itemVariants}
             transition={{ duration: 0.6 }}
           >
-            International Ministers Forum <motion.span 
-              className="text-primary"
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
-            >
-              Africa
-            </motion.span>
+            {t("hero.title")}
           </motion.h1>
           
           <motion.p 
@@ -76,8 +71,7 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
             variants={itemVariants}
             transition={{ duration: 0.6 }}
           >
-            Connecting ministers across Africa for spiritual growth, 
-            fellowship, and empowerment to transform communities.
+            {t("hero.subtitle")}
           </motion.p>
           
           <motion.div 
@@ -91,7 +85,7 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
                 whileTap={{ scale: 0.95 }}
               >
                 <Button className="btn-primary py-6 px-8 text-base font-medium w-full sm:w-auto shadow-lg hover:shadow-xl transition-shadow">
-                  Watch Live Streams
+                  {t("hero.watchButton")}
                   <ChevronRight size={18} className="ml-1" />
                 </Button>
               </motion.div>
@@ -104,7 +98,7 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
               >
                 <Button variant="outline" className="py-6 px-8 text-base font-medium w-full sm:w-auto shadow-lg hover:shadow-xl transition-shadow">
                   <Play size={18} className="mr-1" /> 
-                  Explore Programs
+                  {t("programs.viewAll")}
                 </Button>
               </motion.div>
             </Link>

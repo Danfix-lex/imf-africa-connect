@@ -1,5 +1,6 @@
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import Layout from "@/components/Layout";
 import Hero from "@/components/Hero";
 import LiveStream from "@/components/LiveStream";
@@ -10,6 +11,7 @@ import { ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 const Index = () => {
+  const { t } = useTranslation();
   const featuredStreams = [
     {
       id: "1",
@@ -102,7 +104,7 @@ const Index = () => {
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                About IMF Africa
+                {t("about.title")}
               </motion.p>
               <motion.h2 
                 className="text-3xl md:text-4xl font-bold mb-6"
@@ -111,7 +113,7 @@ const Index = () => {
                 transition={{ duration: 0.6, delay: 0.3 }}
                 viewport={{ once: true }}
               >
-                Uniting Ministers Across Africa
+                {t("about.heading")}
               </motion.h2>
               <motion.p 
                 className="text-muted-foreground mb-6 leading-relaxed"
@@ -120,10 +122,7 @@ const Index = () => {
                 transition={{ duration: 0.6, delay: 0.4 }}
                 viewport={{ once: true }}
               >
-                The International Ministers Forum (IMF) Africa is a premier platform that connects 
-                ministers across the African continent. We provide resources, networking opportunities, 
-                and spiritual enrichment to help ministers effectively lead their congregations and 
-                impact their communities.
+                {t("about.description1")}
               </motion.p>
               <motion.p 
                 className="text-muted-foreground mb-8 leading-relaxed"
@@ -132,8 +131,7 @@ const Index = () => {
                 transition={{ duration: 0.6, delay: 0.5 }}
                 viewport={{ once: true }}
               >
-                Through our various programs, conferences, and online resources, we are committed to 
-                supporting the spiritual and professional growth of ministers throughout Africa.
+                {t("about.description2")}
               </motion.p>
               <motion.div
                 whileHover={{ scale: 1.05, y: -2 }}
@@ -141,7 +139,7 @@ const Index = () => {
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <Button className="btn-primary shadow-lg hover:shadow-xl transition-shadow">
-                  Learn More About Us
+                  {t("about.learnMore")}
                 </Button>
               </motion.div>
             </motion.div>
@@ -181,8 +179,8 @@ const Index = () => {
                   transition: { duration: 0.2 }
                 }}
               >
-                <p className="text-white font-semibold text-xl">20+ Years</p>
-                <p className="text-white/80 text-sm">Serving Ministers</p>
+                <p className="text-white font-semibold text-xl">20+ {t("about.yearsServing")}</p>
+                <p className="text-white/80 text-sm">{t("about.servingMinistersText")}</p>
               </motion.div>
             </motion.div>
           </motion.div>
@@ -205,7 +203,7 @@ const Index = () => {
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                Watch & Learn
+                {t("streams.title")}
               </motion.p>
               <motion.h2 
                 className="text-3xl md:text-4xl font-bold"
@@ -214,7 +212,7 @@ const Index = () => {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 viewport={{ once: true }}
               >
-                Featured Live Streams
+                {t("streams.heading")}
               </motion.h2>
             </div>
             <Link to="/live-streams" className="mt-4 md:mt-0">
@@ -224,7 +222,7 @@ const Index = () => {
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <Button variant="ghost" className="flex items-center group">
-                  View All Streams
+                  {t("streams.viewAll")}
                   <motion.div
                     animate={{ x: 0 }}
                     whileHover={{ x: 5 }}
@@ -282,7 +280,7 @@ const Index = () => {
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                Upcoming Events
+                {t("programs.title")}
               </motion.p>
               <motion.h2 
                 className="text-3xl md:text-4xl font-bold"
@@ -291,7 +289,7 @@ const Index = () => {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 viewport={{ once: true }}
               >
-                Featured Programs
+                {t("programs.heading")}
               </motion.h2>
             </div>
             <Link to="/programs" className="mt-4 md:mt-0">
@@ -301,7 +299,7 @@ const Index = () => {
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <Button variant="ghost" className="flex items-center group">
-                  View All Programs
+                  {t("programs.viewAll")}
                   <motion.div
                     animate={{ x: 0 }}
                     whileHover={{ x: 5 }}
@@ -380,7 +378,7 @@ const Index = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            Join Our Ministerial Community
+            {t("cta.heading")}
           </motion.h2>
           <motion.p 
             className="text-primary-foreground/90 max-w-2xl mx-auto mb-8 text-lg"
@@ -389,8 +387,7 @@ const Index = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            Connect with thousands of ministers across Africa. Share experiences, 
-            resources, and grow together in your ministry journey.
+            {t("cta.description")}
           </motion.p>
           <motion.div 
             className="flex flex-col sm:flex-row justify-center gap-4"
@@ -408,7 +405,7 @@ const Index = () => {
                 className="bg-white text-primary hover:bg-white/90 py-6 px-8 text-base font-medium w-full sm:w-auto shadow-xl hover:shadow-2xl transition-shadow"
                 onClick={() => window.open('https://imf-africa-pay-1.onrender.com', '_blank')}
               >
-                Join Our Ministerial Community
+                {t("cta.joinButton")}
               </Button>
             </motion.div>
             <motion.div
@@ -417,7 +414,7 @@ const Index = () => {
               transition={{ type: "spring", stiffness: 300 }}
             >
               <Button variant="outline" className="border-white text-white hover:bg-white/10 py-6 px-8 text-base font-medium w-full sm:w-auto shadow-xl hover:shadow-2xl transition-shadow">
-                Learn More
+                {t("cta.learnButton")}
               </Button>
             </motion.div>
           </motion.div>
