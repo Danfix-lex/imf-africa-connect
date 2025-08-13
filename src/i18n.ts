@@ -11,7 +11,7 @@ const resources = {
         liveStreams: "Live Streams",
         programs: "Programs", 
         leadership: "Leadership",
-        duesPayment: "Dues Payment",
+        duesPayment: "Remittals",
         dashboard: "Dashboard",
         signIn: "Sign In",
         logout: "Logout",
@@ -23,6 +23,8 @@ const resources = {
         joinButton: "Join Our Community",
         learnButton: "Learn More",
         watchButton: "Watch Live Stream",
+        authButton: "Register / Sign in",
+        welcome: "Welcome to IMF Africa (International Ministers Forum Africa)",
       },
       about: {
         title: "About IMF Africa",

@@ -58,6 +58,9 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
       
       <div className="container-custom relative z-10 pt-8 pb-16 md:py-16">
         <div className="max-w-3xl mx-auto text-center">
+          <motion.p className="text-sm uppercase tracking-wide text-primary mb-2" variants={itemVariants} transition={{ duration: 0.5 }}>
+            {t("hero.welcome")}
+          </motion.p>
           <motion.h1 
             className="font-bold text-4xl md:text-6xl mb-6 leading-tight"
             variants={itemVariants}
@@ -99,6 +102,17 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
                 <Button variant="outline" className="py-6 px-8 text-base font-medium w-full sm:w-auto shadow-lg hover:shadow-xl transition-shadow">
                   <Play size={18} className="mr-1" /> 
                   {t("programs.viewAll")}
+                </Button>
+              </motion.div>
+            </Link>
+
+            <Link to="/auth">
+              <motion.div
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Button variant="secondary" className="py-6 px-8 text-base font-medium w-full sm:w-auto shadow-lg hover:shadow-xl transition-shadow">
+                  {t("hero.authButton")}
                 </Button>
               </motion.div>
             </Link>

@@ -49,7 +49,7 @@ const Navbar = () => {
     { name: t("nav.liveStreams"), path: "/live-streams" },
     { name: t("nav.programs"), path: "/programs" },
     { name: t("nav.leadership"), path: "/leadership" },
-    { name: t("nav.duesPayment"), path: "/dues-payment" },
+    { name: t("nav.duesPayment"), path: "/remittals" },
   ];
 
   return (
