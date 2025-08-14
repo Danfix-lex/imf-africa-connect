@@ -6,8 +6,9 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, User, Users, Clock, Bell, Settings, Plus, PenSquare, Video } from "lucide-react";
+import { Calendar, User, Users, Clock, Bell, Settings, Plus, PenSquare, Video, Home, Radio, Crown, DollarSign } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 import LiveStream from "@/components/LiveStream";
 import ProgramCard from "@/components/ProgramCard";
 
@@ -221,6 +222,54 @@ const Dashboard = () => {
           )}
         </div>
         
+        {/* Dashboard Navigation */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+          <Link to="/home">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardContent className="flex flex-col items-center p-6">
+                <Home className="w-8 h-8 text-primary mb-2" />
+                <span className="font-medium">Home</span>
+              </CardContent>
+            </Card>
+          </Link>
+          
+          <Link to="/live-streams">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardContent className="flex flex-col items-center p-6">
+                <Radio className="w-8 h-8 text-primary mb-2" />
+                <span className="font-medium">Live Streams</span>
+              </CardContent>
+            </Card>
+          </Link>
+          
+          <Link to="/programs">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardContent className="flex flex-col items-center p-6">
+                <Calendar className="w-8 h-8 text-primary mb-2" />
+                <span className="font-medium">Programs</span>
+              </CardContent>
+            </Card>
+          </Link>
+          
+          <Link to="/leadership">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardContent className="flex flex-col items-center p-6">
+                <Crown className="w-8 h-8 text-primary mb-2" />
+                <span className="font-medium">Leadership</span>
+              </CardContent>
+            </Card>
+          </Link>
+          
+          <Link to="/remittals">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardContent className="flex flex-col items-center p-6">
+                <DollarSign className="w-8 h-8 text-primary mb-2" />
+                <span className="font-medium">Remittals</span>
+              </CardContent>
+            </Card>
+          </Link>
+        </div>
+
         <Tabs defaultValue="programs" className="w-full">
           <TabsList className="mb-8">
             <TabsTrigger value="programs">My Programs</TabsTrigger>

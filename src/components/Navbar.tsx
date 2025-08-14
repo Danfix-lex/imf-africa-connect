@@ -45,7 +45,7 @@ const Navbar = () => {
   const { t } = useTranslation();
 
   const navLinks = [
-    { name: t("nav.home"), path: "/" },
+    { name: t("nav.home"), path: "/home" },
     { name: t("nav.liveStreams"), path: "/live-streams" },
     { name: t("nav.programs"), path: "/programs" },
     { name: t("nav.leadership"), path: "/leadership" },
@@ -60,7 +60,7 @@ const Navbar = () => {
       )}
     >
       <div className="container-custom flex items-center justify-between">
-        <Link to="/" className="flex items-center space-x-2">
+        <Link to="/home" className="flex items-center space-x-2">
           <span className="text-2xl font-bold text-primary">IMF</span>
           <span className="font-medium text-lg">Africa</span>
         </Link>
