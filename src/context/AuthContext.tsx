@@ -84,7 +84,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const redirectUrl = `${window.location.origin}/`;
       
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -97,6 +97,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
       if (error) {
         return { error: error.message };
+      }
+
+      // Check if email confirmation is required
+      if (data.user && !data.session) {
+        return { error: "Please check your email and click the confirmation link before logging in." };
       }
 
       return {};
