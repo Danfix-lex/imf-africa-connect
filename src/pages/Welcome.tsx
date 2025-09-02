@@ -20,12 +20,21 @@ const Welcome = () => {
           transition={{ delay: 0.2, duration: 0.5 }}
           className="space-y-4"
         >
-          <h1 className="text-5xl md:text-6xl font-bold text-foreground">
-            IMF Africa
-          </h1>
-          <p className="text-xl md:text-2xl font-medium text-muted-foreground">
-            International Ministers Forum Africa
-          </p>
+          <div className="flex flex-col items-center space-y-4">
+            <img 
+              src="/lovable-uploads/7b18fcc3-0ead-40dd-b631-a1b81336c2dc.png" 
+              alt="International Ministers Forum" 
+              className="w-48 h-48 md:w-56 md:h-56 object-contain"
+            />
+            <div className="text-center">
+              <h1 className="text-4xl md:text-5xl font-bold text-foreground">
+                IMF Africa
+              </h1>
+              <p className="text-lg md:text-xl font-medium text-muted-foreground mt-2">
+                International Ministers Forum Africa
+              </p>
+            </div>
+          </div>
         </motion.div>
 
         {/* Welcome Message */}
