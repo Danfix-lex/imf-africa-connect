@@ -12,9 +12,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import ThemeToggle from "./ThemeToggle";
-import LanguageSwitcher from "./LanguageSwitcher";
-import { useTranslation } from "react-i18next";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,14 +39,10 @@ const Navbar = () => {
     setIsOpen(false);
   }, [location.pathname]);
 
-  const { t } = useTranslation();
-
   const navLinks = [
-    { name: t("nav.home"), path: "/home" },
-    { name: t("nav.liveStreams"), path: "/live-streams" },
-    { name: t("nav.programs"), path: "/programs" },
-    { name: t("nav.leadership"), path: "/leadership" },
-    { name: t("nav.duesPayment"), path: "/remittals" },
+    { name: "Home", path: "/" },
+    { name: "Live Streams", path: "/live-streams" },
+    { name: "Programs", path: "/programs" },
   ];
 
   return (
@@ -60,7 +53,7 @@ const Navbar = () => {
       )}
     >
       <div className="container-custom flex items-center justify-between">
-        <Link to="/home" className="flex items-center space-x-2">
+        <Link to="/" className="flex items-center space-x-2">
           <span className="text-2xl font-bold text-primary">IMF</span>
           <span className="font-medium text-lg">Africa</span>
         </Link>
@@ -83,31 +76,27 @@ const Navbar = () => {
           </div>
           
           <div className="flex items-center space-x-3">
-            <LanguageSwitcher />
-            <ThemeToggle />
-
             {isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="flex items-center gap-1">
-                    {user?.email?.split('@')[0] || 'User'}
+                    {user?.name}
                     <ChevronDown size={16} />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 animate-scale-in z-50 bg-popover">
+                <DropdownMenuContent align="end" className="w-48 animate-scale-in">
                   <DropdownMenuItem asChild>
-                    <Link to="/dashboard" className="w-full cursor-pointer">{t("nav.dashboard")}</Link>
+                    <Link to="/dashboard" className="w-full cursor-pointer">Dashboard</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={logout} className="cursor-pointer">
-                    {t("nav.logout")}
+                    Logout
                   </DropdownMenuItem>
-
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
               <Link to="/auth">
-                <Button className="btn-primary">{t("nav.signIn")}</Button>
+                <Button className="btn-primary">Sign In</Button>
               </Link>
             )}
           </div>
@@ -144,32 +133,24 @@ const Navbar = () => {
             </Link>
           ))}
           
-          <div className="py-2 px-4 flex items-center gap-3">
-            <LanguageSwitcher />
-            <ThemeToggle />
-          </div>
-
           {isAuthenticated ? (
             <>
               <Link 
                 to="/dashboard" 
                 className="py-2 px-4 font-medium hover:text-primary"
               >
-                {t("nav.dashboard")}
+                Dashboard
               </Link>
-
               <button 
                 onClick={logout}
                 className="py-2 px-4 text-left font-medium text-red-500 hover:text-red-600"
               >
-                {t("nav.logout")}
+                Logout
               </button>
-
             </>
           ) : (
             <Link to="/auth" className="py-2 px-4">
-              <Button className="btn-primary w-full">{t("nav.signIn")}</Button>
-
+              <Button className="btn-primary w-full">Sign In</Button>
             </Link>
           )}
         </div>

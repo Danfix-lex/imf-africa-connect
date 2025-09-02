@@ -1,38 +1,32 @@
-import React, { useState, useEffect } from "react";
+
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useToast } from "@/hooks/use-toast";
-import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
-import { Separator } from "@/components/ui/separator";
+import { toast } from "@/components/ui/sonner";
 
 const Auth = () => {
   const navigate = useNavigate();
   const { login, register, isAuthenticated } = useAuth();
-  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("login");
   
   // Login form state
-  const [loginForm, setLoginForm] = useState({
-    email: "",
-    password: ""
-  });
-  const [isLoginLoading, setIsLoginLoading] = useState(false);
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   
   // Register form state
-  const [registerForm, setRegisterForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: ""
-  });
-  const [isRegisterLoading, setIsRegisterLoading] = useState(false);
+  const [registerName, setRegisterName] = useState("");
+  const [registerEmail, setRegisterEmail] = useState("");
+  const [registerPassword, setRegisterPassword] = useState("");
+  const [registerConfirmPassword, setRegisterConfirmPassword] = useState("");
+  const [isRegistering, setIsRegistering] = useState(false);
   
   // Redirect if already authenticated
-  useEffect(() => {
+  React.useEffect(() => {
     if (isAuthenticated) {
       navigate("/dashboard");
     }
@@ -40,97 +34,44 @@ const Auth = () => {
   
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoginLoading(true);
     
+    if (!loginEmail || !loginPassword) {
+      toast.error("Please fill all fields");
+      return;
+    }
+    
+    setIsLoggingIn(true);
     try {
-      if (!loginForm.email || !loginForm.password) {
-        toast({
-          title: "Validation Error",
-          description: "Please fill in all fields",
-          variant: "destructive",
-        });
-        return;
-      }
-      
-      const { error } = await login(loginForm.email, loginForm.password);
-      
-      if (error) {
-        toast({
-          title: "Login Failed",
-          description: error,
-          variant: "destructive",
-        });
-        return;
-      }
-      
-      toast({
-        title: "Success",
-        description: "Login successful!",
-        variant: "default",
-      });
-    } catch (error: any) {
-      console.error("Login error:", error);
-      toast({
-        title: "Login Failed",
-        description: "An unexpected error occurred",
-        variant: "destructive",
-      });
+      await login(loginEmail, loginPassword);
+      // Redirect is handled by the useEffect
+    } catch (error) {
+      console.error(error);
     } finally {
-      setIsLoginLoading(false);
+      setIsLoggingIn(false);
     }
   };
   
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsRegisterLoading(true);
     
+    if (!registerName || !registerEmail || !registerPassword || !registerConfirmPassword) {
+      toast.error("Please fill all fields");
+      return;
+    }
+    
+    if (registerPassword !== registerConfirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+    
+    setIsRegistering(true);
     try {
-      if (!registerForm.name || !registerForm.email || !registerForm.password || !registerForm.confirmPassword) {
-        toast({
-          title: "Validation Error",
-          description: "Please fill in all fields",
-          variant: "destructive",
-        });
-        return;
-      }
-      
-      if (registerForm.password !== registerForm.confirmPassword) {
-        toast({
-          title: "Validation Error",
-          description: "Passwords do not match",
-          variant: "destructive",
-        });
-        return;
-      }
-      
-      const { error } = await register(registerForm.name, registerForm.email, registerForm.password);
-      
-      if (error) {
-        toast({
-          title: "Registration Failed",
-          description: error,
-          variant: "destructive",
-        });
-        return;
-      }
-      
-      toast({
-        title: "Success",
-        description: "Please check your email to confirm your account!",
-        variant: "default",
-      });
-      
-      // Clear form after successful registration
-      setRegisterForm({ name: "", email: "", password: "", confirmPassword: "" });
-    } catch (error: any) {
-      console.error("Registration error:", error);
-      toast({
-        title: "Registration Failed",
-        description: "An unexpected error occurred",
-        variant: "destructive",
-      });
+      await register(registerName, registerEmail, registerPassword);
+      // Redirect is handled by the useEffect
+    } catch (error) {
+      console.error(error);
     } finally {
-      setIsRegisterLoading(false);
+      setIsRegistering(false);
     }
   };
   
@@ -156,8 +97,6 @@ const Auth = () => {
             </TabsList>
             
             <TabsContent value="login">
-              <SocialAuthButtons mode="login" />
-              <div className="my-4"><Separator /></div>
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
@@ -165,8 +104,8 @@ const Auth = () => {
                     id="email" 
                     type="email" 
                     placeholder="you@example.com" 
-                    value={loginForm.email}
-                    onChange={(e) => setLoginForm(prev => ({ ...prev, email: e.target.value }))}
+                    value={loginEmail}
+                    onChange={(e) => setLoginEmail(e.target.value)}
                   />
                 </div>
                 
@@ -181,17 +120,17 @@ const Auth = () => {
                     id="password" 
                     type="password" 
                     placeholder="••••••••" 
-                    value={loginForm.password}
-                    onChange={(e) => setLoginForm(prev => ({ ...prev, password: e.target.value }))}
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
                   />
                 </div>
                 
                 <Button 
                   type="submit" 
                   className="btn-primary w-full"
-                  disabled={isLoginLoading}
+                  disabled={isLoggingIn}
                 >
-                  {isLoginLoading ? "Signing in..." : "Sign In"}
+                  {isLoggingIn ? "Signing in..." : "Sign In"}
                 </Button>
                 
                 <div className="text-sm text-center text-muted-foreground mt-4">
@@ -210,8 +149,6 @@ const Auth = () => {
             </TabsContent>
             
             <TabsContent value="register">
-              <SocialAuthButtons mode="register" />
-              <div className="my-4"><Separator /></div>
               <form onSubmit={handleRegister} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Full Name</Label>
@@ -219,8 +156,8 @@ const Auth = () => {
                     id="name" 
                     type="text" 
                     placeholder="John Doe" 
-                    value={registerForm.name}
-                    onChange={(e) => setRegisterForm(prev => ({ ...prev, name: e.target.value }))}
+                    value={registerName}
+                    onChange={(e) => setRegisterName(e.target.value)}
                   />
                 </div>
                 
@@ -230,8 +167,8 @@ const Auth = () => {
                     id="register-email" 
                     type="email" 
                     placeholder="you@example.com" 
-                    value={registerForm.email}
-                    onChange={(e) => setRegisterForm(prev => ({ ...prev, email: e.target.value }))}
+                    value={registerEmail}
+                    onChange={(e) => setRegisterEmail(e.target.value)}
                   />
                 </div>
                 
@@ -241,8 +178,8 @@ const Auth = () => {
                     id="register-password" 
                     type="password" 
                     placeholder="••••••••" 
-                    value={registerForm.password}
-                    onChange={(e) => setRegisterForm(prev => ({ ...prev, password: e.target.value }))}
+                    value={registerPassword}
+                    onChange={(e) => setRegisterPassword(e.target.value)}
                   />
                 </div>
                 
@@ -252,17 +189,17 @@ const Auth = () => {
                     id="confirm-password" 
                     type="password" 
                     placeholder="••••••••" 
-                    value={registerForm.confirmPassword}
-                    onChange={(e) => setRegisterForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                    value={registerConfirmPassword}
+                    onChange={(e) => setRegisterConfirmPassword(e.target.value)}
                   />
                 </div>
                 
                 <Button 
                   type="submit" 
                   className="btn-primary w-full"
-                  disabled={isRegisterLoading}
+                  disabled={isRegistering}
                 >
-                  {isRegisterLoading ? "Registering..." : "Register"}
+                  {isRegistering ? "Registering..." : "Register"}
                 </Button>
                 
                 <div className="text-sm text-center text-muted-foreground mt-4">

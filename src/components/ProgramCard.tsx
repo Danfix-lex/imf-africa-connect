@@ -15,7 +15,6 @@ interface ProgramCardProps {
   location: string;
   speaker: string;
   className?: string;
-  style?: React.CSSProperties;
 }
 
 const ProgramCard: React.FC<ProgramCardProps> = ({
@@ -28,7 +27,6 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
   location,
   speaker,
   className,
-  style,
 }) => {
   // Format date
   const formatDate = (dateString: string) => {
@@ -42,62 +40,50 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
   };
   
   return (
-    <div 
-      className={cn(
-        "card-enhanced hover-lift group overflow-hidden bg-gradient-card border-border/50",
-        className
-      )}
-      style={style}
-    >
-      <div className="aspect-video overflow-hidden relative">
+    <div className={cn(
+      "overflow-hidden rounded-lg border border-border bg-card hover:shadow-lg transition-all duration-300",
+      className
+    )}>
+      <div className="aspect-video overflow-hidden">
         <img 
           src={imageUrl} 
           alt={title} 
-          className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-card/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
       
-      <div className="p-6 space-y-4">
-        <div className="space-y-2">
-          <h3 className="text-heading line-clamp-2 group-hover:text-primary transition-colors duration-300">
-            {title}
-          </h3>
-          
-          <p className="text-muted-foreground text-body line-clamp-3">
-            {description}
-          </p>
-        </div>
+      <div className="p-5">
+        <h3 className="text-xl font-semibold mb-2 line-clamp-2">{title}</h3>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 py-2">
-          <div className="flex items-center text-sm text-muted-foreground hover:text-primary transition-colors">
-            <CalendarDays size={16} className="mr-3 text-primary flex-shrink-0" />
-            <span className="truncate">{formatDate(date)}</span>
+        <p className="text-muted-foreground text-sm mb-4 line-clamp-3">
+          {description}
+        </p>
+        
+        <div className="space-y-2 mb-4">
+          <div className="flex items-center text-sm text-muted-foreground">
+            <CalendarDays size={16} className="mr-2 text-primary" />
+            <span>{formatDate(date)}</span>
           </div>
           
-          <div className="flex items-center text-sm text-muted-foreground hover:text-primary transition-colors">
-            <Clock size={16} className="mr-3 text-primary flex-shrink-0" />
-            <span className="truncate">{time}</span>
+          <div className="flex items-center text-sm text-muted-foreground">
+            <Clock size={16} className="mr-2 text-primary" />
+            <span>{time}</span>
           </div>
           
-          <div className="flex items-center text-sm text-muted-foreground hover:text-primary transition-colors">
-            <MapPin size={16} className="mr-3 text-primary flex-shrink-0" />
-            <span className="truncate">{location}</span>
+          <div className="flex items-center text-sm text-muted-foreground">
+            <MapPin size={16} className="mr-2 text-primary" />
+            <span>{location}</span>
           </div>
           
-          <div className="flex items-center text-sm text-muted-foreground hover:text-primary transition-colors">
-            <User size={16} className="mr-3 text-primary flex-shrink-0" />
-            <span className="truncate">{speaker}</span>
+          <div className="flex items-center text-sm text-muted-foreground">
+            <User size={16} className="mr-2 text-primary" />
+            <span>{speaker}</span>
           </div>
         </div>
         
-        <div className="flex flex-col sm:flex-row gap-3 pt-2">
-          <Button className="btn-primary flex-1 hover-glow">
-            Learn More
-          </Button>
-          <Button className="btn-outline flex-1">
-            Register
-          </Button>
+        <div className="flex space-x-2">
+          <Button className="btn-primary flex-1">Learn More</Button>
+          <Button variant="outline" className="flex-1">Register</Button>
         </div>
       </div>
     </div>
