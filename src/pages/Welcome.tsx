@@ -6,7 +6,7 @@ import { ArrowRight, Users, Calendar, Radio, Crown } from "lucide-react";
 
 const Welcome = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-secondary/10 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -20,7 +20,7 @@ const Welcome = () => {
           transition={{ delay: 0.2, duration: 0.5 }}
           className="space-y-4"
         >
-          <h1 className="text-5xl md:text-6xl font-bold text-primary">
+          <h1 className="text-5xl md:text-6xl font-bold text-foreground">
             IMF Africa
           </h1>
           <p className="text-xl md:text-2xl font-medium text-muted-foreground">
