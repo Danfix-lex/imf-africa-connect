@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { validateEmail, isRateLimited } from '@/utils/validation';
 
 interface SubscriptionFormProps {
   className?: string;
@@ -17,22 +18,22 @@ const SubscriptionForm: React.FC<SubscriptionFormProps> = ({ className }) => {
     setIsLoading(true);
 
     try {
-      // Enhanced email validation
-      if (!email || !email.trim()) {
+      // Client-side rate limiting
+      if (isRateLimited('email_subscription', 3, 15 * 60 * 1000)) {
         toast({
-          title: "Validation Error",
-          description: "Please enter your email address",
+          title: "Too Many Attempts",
+          description: "Please wait 15 minutes before trying again",
           variant: "destructive",
         });
         return;
       }
 
-      // Basic email format validation
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email.trim())) {
+      // Enhanced email validation using utility
+      const emailValidation = validateEmail(email);
+      if (!emailValidation.isValid) {
         toast({
           title: "Invalid Email",
-          description: "Please enter a valid email address",
+          description: emailValidation.error,
           variant: "destructive",
         });
         return;

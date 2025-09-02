@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import { SecurityHeaders } from "./components/security/SecurityHeaders";
 import Welcome from "./pages/Welcome";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
@@ -17,6 +18,7 @@ import NotFound from "./pages/NotFound";
 
 const App = () => (
   <TooltipProvider>
+    <SecurityHeaders />
     <Toaster />
     <Sonner />
     <AuthProvider>
