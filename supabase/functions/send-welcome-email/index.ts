@@ -13,6 +13,33 @@ interface WelcomeEmailRequest {
   email: string;
 }
 
+// Simple in-memory rate limiting (consider Redis for production)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
+const MAX_REQUESTS = 3; // Max 3 requests per IP per window
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const record = rateLimitMap.get(ip);
+  
+  if (!record || now > record.resetTime) {
+    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    return false;
+  }
+  
+  if (record.count >= MAX_REQUESTS) {
+    return true;
+  }
+  
+  record.count++;
+  return false;
+}
+
+function validateEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email) && email.length <= 254; // RFC 5321 limit
+}
+
 const handler = async (req: Request): Promise<Response> => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -20,11 +47,25 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    // Rate limiting by IP
+    const clientIP = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    if (isRateLimited(clientIP)) {
+      console.log(`Rate limit exceeded for IP: ${clientIP}`);
+      return new Response(
+        JSON.stringify({ error: "Too many requests. Please try again later." }),
+        {
+          status: 429,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
     const { email }: WelcomeEmailRequest = await req.json();
 
-    if (!email) {
+    // Enhanced email validation
+    if (!email || typeof email !== 'string') {
       return new Response(
-        JSON.stringify({ error: "Email is required" }),
+        JSON.stringify({ error: "Valid email is required" }),
         {
           status: 400,
           headers: { "Content-Type": "application/json", ...corsHeaders },
@@ -32,9 +73,23 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
+    const sanitizedEmail = email.trim().toLowerCase();
+    
+    if (!validateEmail(sanitizedEmail)) {
+      return new Response(
+        JSON.stringify({ error: "Invalid email format" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    console.log(`Sending welcome email to: ${sanitizedEmail}`);
+
     const emailResponse = await resend.emails.send({
       from: "IMF Africa <onboarding@resend.dev>",
-      to: [email],
+      to: [sanitizedEmail],
       subject: "Welcome to IMF Africa Newsletter!",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">

@@ -17,7 +17,8 @@ const SubscriptionForm: React.FC<SubscriptionFormProps> = ({ className }) => {
     setIsLoading(true);
 
     try {
-      if (!email) {
+      // Enhanced email validation
+      if (!email || !email.trim()) {
         toast({
           title: "Validation Error",
           description: "Please enter your email address",
@@ -26,10 +27,24 @@ const SubscriptionForm: React.FC<SubscriptionFormProps> = ({ className }) => {
         return;
       }
 
+      // Basic email format validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email.trim())) {
+        toast({
+          title: "Invalid Email",
+          description: "Please enter a valid email address",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Sanitize email input
+      const sanitizedEmail = email.trim().toLowerCase();
+
       // Save email to subscriptions table
       const { error: subscriptionError } = await supabase
         .from('email_subscriptions')
-        .insert({ email });
+        .insert({ email: sanitizedEmail });
 
       if (subscriptionError) {
         if (subscriptionError.code === '23505') { // Unique constraint violation
@@ -46,7 +61,7 @@ const SubscriptionForm: React.FC<SubscriptionFormProps> = ({ className }) => {
 
       // Send welcome email
       const { error: emailError } = await supabase.functions.invoke('send-welcome-email', {
-        body: { email }
+        body: { email: sanitizedEmail }
       });
 
       if (emailError) {
