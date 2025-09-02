@@ -2,6 +2,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Facebook, Twitter, Instagram, Youtube, Mail, MapPin, Phone } from "lucide-react";
+import SubscriptionForm from "./SubscriptionForm";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -86,19 +87,7 @@ const Footer = () => {
             <p className="text-muted-foreground mb-4">
               Subscribe to our newsletter for the latest updates and events.
             </p>
-            <form className="flex flex-col space-y-2">
-              <input 
-                type="email" 
-                placeholder="Your email" 
-                className="rounded-md border-border bg-background px-3 py-2 text-sm"
-              />
-              <button 
-                type="submit" 
-                className="btn-primary"
-              >
-                Subscribe
-              </button>
-            </form>
+            <SubscriptionForm />
           </div>
         </div>
         

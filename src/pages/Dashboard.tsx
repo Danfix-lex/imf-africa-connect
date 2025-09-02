@@ -6,16 +6,37 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, User, Users, Clock, Bell, Settings, Plus, PenSquare, Video } from "lucide-react";
+import { Calendar, User, Users, Clock, Bell, Settings, Plus, PenSquare, Video, Home, Radio, Crown, DollarSign } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 import LiveStream from "@/components/LiveStream";
 import ProgramCard from "@/components/ProgramCard";
+
+// Custom UserPlus icon component that accepts className and size props
+const UserPlus = ({ className, size = 24 }: { className?: string; size?: number }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+    <circle cx="9" cy="7" r="4" />
+    <line x1="19" x2="19" y1="8" y2="14" />
+    <line x1="22" x2="16" y1="11" y2="11" />
+  </svg>
+);
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, isLoading } = useAuth();
   
-  // Redirect if not authenticated
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       navigate("/auth");
@@ -139,7 +160,7 @@ const Dashboard = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Welcome, {user?.name}!</h1>
+            <h1 className="text-3xl font-bold mb-2">Welcome, {user?.email?.split('@')[0] || 'User'}!</h1>
             <p className="text-muted-foreground">
               {isAdmin 
                 ? "Manage your platform, users, and content from your admin dashboard." 
@@ -201,6 +222,54 @@ const Dashboard = () => {
           )}
         </div>
         
+        {/* Dashboard Navigation */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+          <Link to="/home">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardContent className="flex flex-col items-center p-6">
+                <Home className="w-8 h-8 text-primary mb-2" />
+                <span className="font-medium">Home</span>
+              </CardContent>
+            </Card>
+          </Link>
+          
+          <Link to="/live-streams">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardContent className="flex flex-col items-center p-6">
+                <Radio className="w-8 h-8 text-primary mb-2" />
+                <span className="font-medium">Live Streams</span>
+              </CardContent>
+            </Card>
+          </Link>
+          
+          <Link to="/programs">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardContent className="flex flex-col items-center p-6">
+                <Calendar className="w-8 h-8 text-primary mb-2" />
+                <span className="font-medium">Programs</span>
+              </CardContent>
+            </Card>
+          </Link>
+          
+          <Link to="/leadership">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardContent className="flex flex-col items-center p-6">
+                <Crown className="w-8 h-8 text-primary mb-2" />
+                <span className="font-medium">Leadership</span>
+              </CardContent>
+            </Card>
+          </Link>
+          
+          <Link to="/remittals">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardContent className="flex flex-col items-center p-6">
+                <DollarSign className="w-8 h-8 text-primary mb-2" />
+                <span className="font-medium">Remittals</span>
+              </CardContent>
+            </Card>
+          </Link>
+        </div>
+
         <Tabs defaultValue="programs" className="w-full">
           <TabsList className="mb-8">
             <TabsTrigger value="programs">My Programs</TabsTrigger>
@@ -359,7 +428,7 @@ const Dashboard = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="name">Full Name</Label>
-                        <Input id="name" defaultValue={user?.name} className="mt-1" />
+                        <Input id="name" defaultValue={user?.user_metadata?.name || user?.email?.split('@')[0] || ''} className="mt-1" />
                       </div>
                       <div>
                         <Label htmlFor="email">Email Address</Label>
@@ -409,7 +478,6 @@ const Dashboard = () => {
   );
 };
 
-// Mock components for settings page
 const Label = ({ htmlFor, children }: { htmlFor: string, children: React.ReactNode }) => (
   <label htmlFor={htmlFor} className="text-sm font-medium">{children}</label>
 );
