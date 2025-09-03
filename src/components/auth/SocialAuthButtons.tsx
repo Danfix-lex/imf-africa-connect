@@ -12,10 +12,13 @@ const SocialAuthButtons: React.FC<Props> = ({ mode }) => {
 
   const handleOAuth = async (provider: "google" | "apple") => {
     try {
+      // Use a dedicated environment variable for the redirect URL
+      const redirectTo = import.meta.env.VITE_AUTH_REDIRECT_TO || window.location.origin;
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: window.location.origin,
+          redirectTo,
         },
       });
       if (error) throw error;
