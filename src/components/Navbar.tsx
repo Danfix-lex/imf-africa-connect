@@ -82,7 +82,7 @@ const Navbar = () => {
           </NavigationMenu>
         </div>
 
-        {/* Right side of Navbar (Login/Logout, User Menu) - FULLY RESTORED */}
+        {/* Right side of Navbar */}
         <div className="hidden md:flex items-center space-x-3">
           <LanguageSwitcher />
           <ThemeToggle />
@@ -111,13 +111,13 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Menu Button - FULLY RESTORED */}
+        {/* Mobile Menu Button */}
         <button className="md:hidden text-foreground" onClick={toggleMenu} aria-label="Toggle menu">
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
-      {/* Mobile Navigation - FULLY RESTORED */}
+      {/* Mobile Navigation */}
       <div className={cn("md:hidden absolute w-full bg-background/95 backdrop-blur-md shadow-lg transition-all duration-300 ease-in-out overflow-hidden", isOpen ? "max-h-screen py-4" : "max-h-0")}>
         <div className="container-custom flex flex-col space-y-2">
           <Link to="/home" className="py-2 px-4 font-medium hover:text-primary rounded-md">Home</Link>
@@ -149,7 +149,6 @@ const Navbar = () => {
   );
 };
 
-// Helper component for navigation dropdown
 const ListItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWithoutRef<"a"> & { to: string }>(({ className, title, children, to, ...props }, ref) => {
   return (
     <li>

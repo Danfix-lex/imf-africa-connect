@@ -32,7 +32,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const initialize = async () => {
       try {
         const fetchFullProfile = async (userId: string) => {
-          // This query now also fetches the user's role from the 'user_roles' table
           const { data, error } = await supabase
             .from('profiles')
             .select('*, role:user_roles(role)')
@@ -41,20 +40,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
           if (error) {
             console.error("Error fetching profile:", error);
-            setProfile(null); // Clear profile on error
+            setProfile(null);
             return null;
           }
           
-          // Format the data to make the role easily accessible
           const profileData = {
               ...data,
-              role: data.role[0]?.role || 'user',
+              role: Array.isArray(data.role) ? (data.role[0]?.role || 'user') : 'user',
           };
           setProfile(profileData);
           return profileData;
         };
 
-        // Get initial session
         const { data: { session } } = await supabase.auth.getSession();
         setSession(session);
         const currentUser = session?.user ?? null;
@@ -63,7 +60,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           await fetchFullProfile(currentUser.id);
         }
 
-        // Set up auth state listener
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
           async (event, session) => {
             setSession(session);
@@ -81,7 +77,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       } catch (error) {
         console.error("Error in AuthProvider initialization:", error);
       } finally {
-        // This ensures the loading screen always disappears, even if an error occurs
         setIsLoading(false);
       }
     };
@@ -130,7 +125,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     session,
     isAuthenticated: !!user,
     isLoading,
-    isAdmin: profile?.role === 'admin', // A simple boolean for checking admin status
+    isAdmin: profile?.role === 'admin',
     login,
     register,
     logout,

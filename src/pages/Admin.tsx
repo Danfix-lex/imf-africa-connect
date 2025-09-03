@@ -28,7 +28,7 @@ import { ResourceForm } from "@/components/admin/ResourceForm";
 import { toast } from "@/utils/toast";
 
 // Type Definitions
-type User = {
+type UserType = {
   id: string;
   email: string | undefined;
   created_at: string;
@@ -53,11 +53,11 @@ type MemberResource = {
 
 const Admin = () => {
   const navigate = useNavigate();
-  const { user, isAuthenticated, isLoading } = useAuth();
-  const isAdmin = user?.role === "admin";
+  // Key Change: Get the new 'isAdmin' flag directly from the context
+  const { isAuthenticated, isLoading, isAdmin } = useAuth();
 
   // State Management
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<UserType[]>([]);
   const [prayerRequests, setPrayerRequests] = useState<PrayerRequestAdmin[]>([]);
   const [resources, setResources] = useState<MemberResource[]>([]);
 
@@ -74,7 +74,7 @@ const Admin = () => {
         id: profile.user_id,
         email: profile.user.email,
         created_at: new Date(profile.user.created_at).toLocaleDateString(),
-        role: profile.role[0]?.role || "user",
+        role: Array.isArray(profile.role) ? (profile.role[0]?.role || "user") : "user",
       }));
       setUsers(formattedUsers);
     }
@@ -91,8 +91,9 @@ const Admin = () => {
   };
 
   useEffect(() => {
+    // Key Change: This check is now simpler and more reliable
     if (!isLoading && (!isAuthenticated || !isAdmin)) {
-      navigate("/admin/login"); // Redirect to admin login if not an authenticated admin
+      navigate("/admin/login");
     }
     if (isAdmin) {
       fetchUsers();
