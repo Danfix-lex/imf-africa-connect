@@ -7,6 +7,7 @@ import { SecurityHeaders } from "./components/security/SecurityHeaders";
 import Welcome from "./pages/Welcome";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import AdminAuth from "./pages/AdminAuth"; // Import the new admin auth page
 import LiveStreams from "./pages/LiveStreams";
 import Programs from "./pages/Programs";
 import Leadership from "./pages/Leadership";
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/" element={<Welcome />} />
           <Route path="/home" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/admin/login" element={<AdminAuth />} /> {/* Add admin login route */}
           <Route path="/live-streams" element={<LiveStreams />} />
           <Route path="/programs" element={<Programs />} />
           <Route path="/leadership" element={<Leadership />} />

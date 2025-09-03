@@ -18,7 +18,7 @@ import { useTranslation } from "react-i18next";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user, profile, logout, isAuthenticated } = useAuth(); // Use the 'profile' object from the context
   const location = useLocation();
 
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -72,7 +72,9 @@ const Navbar = () => {
                 to={link.path}
                 className={cn(
                   "font-medium transition-colors hover:text-primary",
-                  location.pathname === link.path ? "text-primary" : "text-foreground/80"
+                  location.pathname === link.path
+                    ? "text-primary"
+                    : "text-foreground/80"
                 )}
               >
                 {link.name}
@@ -88,19 +90,24 @@ const Navbar = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="flex items-center gap-1">
-                    {user?.email?.split('@')[0] || 'User'}
+                    {/* Key Change: Use profile.display_name */}
+                    {profile?.display_name || user?.email?.split('@')[0] || 'User'}
                     <ChevronDown size={16} />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 animate-scale-in z-50 bg-popover">
+                <DropdownMenuContent
+                  align="end"
+                  className="w-48 animate-scale-in z-50 bg-popover"
+                >
                   <DropdownMenuItem asChild>
-                    <Link to="/dashboard" className="w-full cursor-pointer">{t("nav.dashboard")}</Link>
+                    <Link to="/dashboard" className="w-full cursor-pointer">
+                      {t("nav.dashboard")}
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={logout} className="cursor-pointer">
                     {t("nav.logout")}
                   </DropdownMenuItem>
-
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
@@ -135,7 +142,9 @@ const Navbar = () => {
               to={link.path}
               className={cn(
                 "py-2 px-4 font-medium transition-colors hover:text-primary",
-                location.pathname === link.path ? "text-primary" : "text-foreground/80"
+                location.pathname === link.path
+                  ? "text-primary"
+                  : "text-foreground/80"
               )}
             >
               {link.name}
@@ -162,12 +171,12 @@ const Navbar = () => {
               >
                 {t("nav.logout")}
               </button>
-
             </>
           ) : (
             <Link to="/auth" className="py-2 px-4">
-              <Button className="btn-primary w-full">{t("nav.signIn")}</Button>
-
+              <Button className="btn-primary w-full">
+                {t("nav.signIn")}
+              </Button>
             </Link>
           )}
         </div>
