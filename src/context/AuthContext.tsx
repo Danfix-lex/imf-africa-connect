@@ -9,7 +9,7 @@ type Profile = {
 
 type AuthContextType = {
   user: User | null;
-  profile: Profile | null; // Add profile to the context
+  profile: Profile | null;
   session: Session | null;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -55,7 +55,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setIsLoading(false);
 
         if (event === 'SIGNED_IN') {
-          // Profile creation logic...
+          setTimeout(async () => {
+            const { data: existingProfile } = await supabase
+              .from('profiles')
+              .select('id')
+              .eq('user_id', session.user.id)
+              .single();
+              
+            if (!existingProfile) {
+              await supabase
+                .from('profiles')
+                .insert({
+                  user_id: session.user.id,
+                  display_name: session.user.user_metadata?.name,
+                  country: session.user.user_metadata?.country,
+                });
+            }
+          }, 0);
         }
       }
     );
@@ -73,11 +89,58 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return () => subscription.unsubscribe();
   }, []);
 
-  // register function remains the same
+  const login = async (email: string, password: string): Promise<{ error?: string }> => {
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) {
+        return { error: error.message };
+      }
+      return {};
+    } catch (error: any) {
+      return { error: error.message };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const register = async (name: string, email: string, password: string, country: string): Promise<{ error?: string }> => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            name: name,
+            country: country,
+          }
+        }
+      });
+      if (error) {
+        return { error: error.message };
+      }
+      if (data.user && !data.session) {
+        return { error: "Please check your email and click the confirmation link before logging in." };
+      }
+      return {};
+    } catch (error: any) {
+      return { error: error.message };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const logout = async (): Promise<void> => {
+    await supabase.auth.signOut();
+  };
 
   const value = {
     user,
-    profile, // Expose profile in the context
+    profile,
     session,
     isAuthenticated: !!user,
     isLoading,
