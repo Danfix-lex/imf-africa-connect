@@ -5,9 +5,8 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Settings, Plus, Video, Home, Radio, Crown, DollarSign, Shield } from "lucide-react";
+import { Calendar, Settings, Plus, Home, Radio, Crown, HeartHandshake, Shield } from "lucide-react";
 import ProgramCard from "@/components/ProgramCard";
-import LiveStream from "@/components/LiveStream";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
@@ -15,11 +14,10 @@ import { toast } from "@/utils/toast";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { user, profile, isAuthenticated, isLoading } = useAuth();
-  const isAdmin = user?.role === "admin";
+  // Key Change: Get the new 'isAdmin' flag directly from the context.
+  const { user, profile, isAuthenticated, isLoading, isAdmin } = useAuth();
 
   const [myUpcomingPrograms, setMyUpcomingPrograms] = useState<any[]>([]);
-  const [savedStreams, setSavedStreams] = useState<any[]>([]);
   const [displayName, setDisplayName] = useState("");
 
   useEffect(() => {
@@ -90,6 +88,7 @@ const Dashboard = () => {
               Manage your IMF Africa account, programs, and streams from your dashboard.
             </p>
           </div>
+          {/* Key Change: Use the new 'isAdmin' flag here. */}
           {isAdmin && (
             <Link to="/admin" className="mt-4 md:mt-0">
               <Button>
@@ -106,7 +105,7 @@ const Dashboard = () => {
           <Link to="/live-streams"><Card className="hover:shadow-lg transition-shadow cursor-pointer"><CardContent className="flex flex-col items-center p-6"><Radio className="w-8 h-8 text-primary mb-2" /><span className="font-medium">Live Streams</span></CardContent></Card></Link>
           <Link to="/programs"><Card className="hover:shadow-lg transition-shadow cursor-pointer"><CardContent className="flex flex-col items-center p-6"><Calendar className="w-8 h-8 text-primary mb-2" /><span className="font-medium">Programs</span></CardContent></Card></Link>
           <Link to="/leadership"><Card className="hover:shadow-lg transition-shadow cursor-pointer"><CardContent className="flex flex-col items-center p-6"><Crown className="w-8 h-8 text-primary mb-2" /><span className="font-medium">Leadership</span></CardContent></Card></Link>
-          <Link to="/remittals"><Card className="hover:shadow-lg transition-shadow cursor-pointer"><CardContent className="flex flex-col items-center p-6"><DollarSign className="w-8 h-8 text-primary mb-2" /><span className="font-medium">Remittals</span></CardContent></Card></Link>
+          <Link to="/giving"><Card className="hover:shadow-lg transition-shadow cursor-pointer"><CardContent className="flex flex-col items-center p-6"><HeartHandshake className="w-8 h-8 text-primary mb-2" /><span className="font-medium">Giving</span></CardContent></Card></Link>
         </div>
 
         <Tabs defaultValue="programs" className="w-full">
@@ -141,7 +140,6 @@ const Dashboard = () => {
 
           <TabsContent value="streams">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* This section would be populated with streams the user has saved */}
               <Card className="border-dashed border-2 flex items-center justify-center h-full animate-fade-in" style={{ animationDelay: "0.1s" }}>
                 <CardContent className="flex flex-col items-center justify-center py-8">
                   <p className="text-muted-foreground text-center">Saved streams feature coming soon!</p>

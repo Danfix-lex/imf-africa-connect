@@ -5,6 +5,7 @@ import type { User, Session, AuthChangeEvent } from '@supabase/supabase-js';
 type Profile = {
   display_name: string | null;
   country: string | null;
+  role: string | null; // Add role to profile
 };
 
 type AuthContextType = {
@@ -13,6 +14,7 @@ type AuthContextType = {
   session: Session | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isAdmin: boolean; // Add isAdmin for easy access
   login: (email: string, password: string) => Promise<{ error?: string }>;
   register: (name: string, email: string, password: string, country: string) => Promise<{ error?: string }>;
   logout: () => Promise<void>;
@@ -27,78 +29,71 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProfile = async (userId: string) => {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('display_name, country')
-        .eq('user_id', userId)
-        .single();
-      
-      if (error) {
-        console.error("Error fetching profile:", error);
-      } else {
-        setProfile(data);
+    const initialize = async () => {
+      try {
+        const fetchFullProfile = async (userId: string) => {
+          // This query now also fetches the user's role from the 'user_roles' table
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('*, role:user_roles(role)')
+            .eq('user_id', userId)
+            .single();
+
+          if (error) {
+            console.error("Error fetching profile:", error);
+            setProfile(null); // Clear profile on error
+            return null;
+          }
+          
+          // Format the data to make the role easily accessible
+          const profileData = {
+              ...data,
+              role: data.role[0]?.role || 'user',
+          };
+          setProfile(profileData);
+          return profileData;
+        };
+
+        // Get initial session
+        const { data: { session } } = await supabase.auth.getSession();
+        setSession(session);
+        const currentUser = session?.user ?? null;
+        setUser(currentUser);
+        if (currentUser) {
+          await fetchFullProfile(currentUser.id);
+        }
+
+        // Set up auth state listener
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+          async (event, session) => {
+            setSession(session);
+            const currentUser = session?.user ?? null;
+            setUser(currentUser);
+            if (currentUser) {
+              await fetchFullProfile(currentUser.id);
+            } else {
+              setProfile(null);
+            }
+          }
+        );
+
+        return () => subscription.unsubscribe();
+      } catch (error) {
+        console.error("Error in AuthProvider initialization:", error);
+      } finally {
+        // This ensures the loading screen always disappears, even if an error occurs
+        setIsLoading(false);
       }
     };
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event: AuthChangeEvent, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-
-        if (session?.user) {
-          await fetchProfile(session.user.id);
-        } else {
-          setProfile(null);
-        }
-        
-        setIsLoading(false);
-
-        if (event === 'SIGNED_IN') {
-          setTimeout(async () => {
-            const { data: existingProfile } = await supabase
-              .from('profiles')
-              .select('id')
-              .eq('user_id', session.user.id)
-              .single();
-              
-            if (!existingProfile) {
-              await supabase
-                .from('profiles')
-                .insert({
-                  user_id: session.user.id,
-                  display_name: session.user.user_metadata?.name,
-                  country: session.user.user_metadata?.country,
-                });
-            }
-          }, 0);
-        }
-      }
-    );
-
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      setSession(session);
-      const currentUser = session?.user ?? null;
-      setUser(currentUser);
-      if (currentUser) {
-        await fetchProfile(currentUser.id);
-      }
-      setIsLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+    initialize();
   }, []);
 
   const login = async (email: string, password: string): Promise<{ error?: string }> => {
     setIsLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (error) {
-        return { error: error.message };
-      }
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) return { error: error.message };
       return {};
     } catch (error: any) {
       return { error: error.message };
@@ -113,19 +108,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        options: {
-          data: {
-            name: name,
-            country: country,
-          }
-        }
+        options: { data: { name, country } }
       });
-      if (error) {
-        return { error: error.message };
-      }
-      if (data.user && !data.session) {
-        return { error: "Please check your email and click the confirmation link before logging in." };
-      }
+      if (error) return { error: error.message };
+      if (data.user && !data.session) return { error: "Please check your email to confirm your account." };
       return {};
     } catch (error: any) {
       return { error: error.message };
@@ -144,6 +130,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     session,
     isAuthenticated: !!user,
     isLoading,
+    isAdmin: profile?.role === 'admin', // A simple boolean for checking admin status
     login,
     register,
     logout,
