@@ -1,10 +1,26 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, Users, Calendar, Radio, Crown } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 const Welcome = () => {
+  const { isAuthenticated, isLoading } = useAuth(); // Get auth state
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Key Change: If the user is already logged in, redirect them to the home page.
+    if (!isLoading && isAuthenticated) {
+      navigate("/home");
+    }
+  }, [isAuthenticated, isLoading, navigate]);
+
+  // While checking the auth state, show a blank screen to avoid a flash of the welcome page.
+  if (isLoading || isAuthenticated) {
+    return <div className="min-h-screen bg-background"></div>;
+  }
+  
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <motion.div 

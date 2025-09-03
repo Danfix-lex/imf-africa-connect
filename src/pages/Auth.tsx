@@ -105,7 +105,10 @@ const Auth = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-secondary/30 py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
-        {/* ... Header */}
+        <div className="text-center">
+            <img src="/logo.png" alt="Logo" className="mx-auto h-16 w-auto" />
+            <h2 className="mt-6 text-3xl font-bold">Sign in to your account</h2>
+        </div>
         <div className="bg-card shadow-lg rounded-lg p-8 mt-8 animate-fade-in">
           <Tabs defaultValue="login" value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="grid grid-cols-2 w-full mb-6">
@@ -114,7 +117,49 @@ const Auth = () => {
             </TabsList>
 
             <TabsContent value="login">
-              {/* ... Login Form */}
+              <SocialAuthButtons mode="login" />
+              <div className="my-4"><Separator /></div>
+              <form onSubmit={handleLogin} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="login-email">Email</Label>
+                  <Input
+                    id="login-email"
+                    type="email"
+                    placeholder="you@example.com"
+                    value={loginForm.email}
+                    onChange={(e) => setLoginForm(prev => ({ ...prev, email: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="login-password">Password</Label>
+                  <Input
+                    id="login-password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={loginForm.password}
+                    onChange={(e) => setLoginForm(prev => ({ ...prev, password: e.target.value }))}
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  className="btn-primary w-full"
+                  disabled={isLoginLoading}
+                >
+                  {isLoginLoading ? "Signing in..." : "Sign In"}
+                </Button>
+                <div className="text-sm text-center text-muted-foreground mt-4">
+                  <p>
+                    Don't have an account?{" "}
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab("register")}
+                      className="text-primary hover:underline"
+                    >
+                      Register
+                    </button>
+                  </p>
+                </div>
+              </form>
             </TabsContent>
 
             <TabsContent value="register">
@@ -123,83 +168,38 @@ const Auth = () => {
               <form onSubmit={handleRegister} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Full Name</Label>
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="John Doe"
-                    value={registerForm.name}
-                    onChange={(e) => setRegisterForm(prev => ({ ...prev, name: e.target.value }))}
-                  />
+                  <Input id="name" type="text" placeholder="John Doe" value={registerForm.name} onChange={(e) => setRegisterForm(prev => ({ ...prev, name: e.target.value }))} />
                 </div>
-
                 <div className="space-y-2">
                   <Label htmlFor="country">Country</Label>
-                  <Select
-                    onValueChange={(value) => setRegisterForm(prev => ({ ...prev, country: value }))}
-                    value={registerForm.country}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select your country" />
-                    </SelectTrigger>
+                  <Select onValueChange={(value) => setRegisterForm(prev => ({ ...prev, country: value }))} value={registerForm.country}>
+                    <SelectTrigger><SelectValue placeholder="Select your country" /></SelectTrigger>
                     <SelectContent>
                       {africanCountries.map((country) => (
-                        <SelectItem key={country} value={country}>
-                          {country}
-                        </SelectItem>
+                        <SelectItem key={country} value={country}>{country}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
-
                 <div className="space-y-2">
                   <Label htmlFor="register-email">Email</Label>
-                  <Input
-                    id="register-email"
-                    type="email"
-                    placeholder="you@example.com"
-                    value={registerForm.email}
-                    onChange={(e) => setRegisterForm(prev => ({ ...prev, email: e.target.value }))}
-                  />
+                  <Input id="register-email" type="email" placeholder="you@example.com" value={registerForm.email} onChange={(e) => setRegisterForm(prev => ({ ...prev, email: e.target.value }))} />
                 </div>
-
                 <div className="space-y-2">
                   <Label htmlFor="register-password">Password</Label>
-                  <Input
-                    id="register-password"
-                    type="password"
-                    placeholder="••••••••"
-                    value={registerForm.password}
-                    onChange={(e) => setRegisterForm(prev => ({ ...prev, password: e.target.value }))}
-                  />
+                  <Input id="register-password" type="password" placeholder="••••••••" value={registerForm.password} onChange={(e) => setRegisterForm(prev => ({ ...prev, password: e.target.value }))} />
                 </div>
-
                 <div className="space-y-2">
                   <Label htmlFor="confirm-password">Confirm Password</Label>
-                  <Input
-                    id="confirm-password"
-                    type="password"
-                    placeholder="••••••••"
-                    value={registerForm.confirmPassword}
-                    onChange={(e) => setRegisterForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                  />
+                  <Input id="confirm-password" type="password" placeholder="••••••••" value={registerForm.confirmPassword} onChange={(e) => setRegisterForm(prev => ({ ...prev, confirmPassword: e.target.value }))} />
                 </div>
-
-                <Button
-                  type="submit"
-                  className="btn-primary w-full"
-                  disabled={isRegisterLoading}
-                >
+                <Button type="submit" className="btn-primary w-full" disabled={isRegisterLoading}>
                   {isRegisterLoading ? "Registering..." : "Register"}
                 </Button>
-
                 <div className="text-sm text-center text-muted-foreground mt-4">
                   <p>
                     Already have an account?{" "}
-                    <button
-                      type="button"
-                      onClick={() => setActiveTab("login")}
-                      className="text-primary hover:underline"
-                    >
+                    <button type="button" onClick={() => setActiveTab("login")} className="text-primary hover:underline">
                       Sign In
                     </button>
                   </p>
@@ -208,7 +208,6 @@ const Auth = () => {
             </TabsContent>
           </Tabs>
         </div>
-        {/* ... Footer */}
       </div>
     </div>
   );
