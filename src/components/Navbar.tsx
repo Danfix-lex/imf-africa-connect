@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ChevronDown } from "lucide-react";
@@ -21,9 +20,9 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const { user, logout, isAuthenticated } = useAuth();
   const location = useLocation();
-  
+
   const toggleMenu = () => setIsOpen(!isOpen);
-  
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 20) {
@@ -32,11 +31,11 @@ const Navbar = () => {
         setScrolled(false);
       }
     };
-    
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-  
+
   useEffect(() => {
     // Close mobile menu when route changes
     setIsOpen(false);
@@ -53,7 +52,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav 
+    <nav
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         scrolled ? "glass py-2 shadow-md" : "bg-transparent py-4"
@@ -61,10 +60,9 @@ const Navbar = () => {
     >
       <div className="container-custom flex items-center justify-between">
         <Link to="/home" className="flex items-center space-x-2">
-          <span className="text-2xl font-bold text-primary">IMF</span>
-          <span className="font-medium text-lg">Africa</span>
+          <img src="/logo.png" alt="IMF Africa Logo" className="h-8 w-auto" />
         </Link>
-        
+
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-8">
           <div className="flex items-center space-x-6">
@@ -81,7 +79,7 @@ const Navbar = () => {
               </Link>
             ))}
           </div>
-          
+
           <div className="flex items-center space-x-3">
             <LanguageSwitcher />
             <ThemeToggle />
@@ -112,9 +110,9 @@ const Navbar = () => {
             )}
           </div>
         </div>
-        
+
         {/* Mobile Menu Button */}
-        <button 
+        <button
           className="md:hidden text-foreground"
           onClick={toggleMenu}
           aria-label="Toggle menu"
@@ -122,9 +120,9 @@ const Navbar = () => {
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
-      
+
       {/* Mobile Navigation */}
-      <div 
+      <div
         className={cn(
           "md:hidden absolute w-full bg-background/95 backdrop-blur-md shadow-lg transition-all duration-300 ease-in-out overflow-hidden",
           isOpen ? "max-h-screen py-4" : "max-h-0"
@@ -143,7 +141,7 @@ const Navbar = () => {
               {link.name}
             </Link>
           ))}
-          
+
           <div className="py-2 px-4 flex items-center gap-3">
             <LanguageSwitcher />
             <ThemeToggle />
@@ -151,14 +149,14 @@ const Navbar = () => {
 
           {isAuthenticated ? (
             <>
-              <Link 
-                to="/dashboard" 
+              <Link
+                to="/dashboard"
                 className="py-2 px-4 font-medium hover:text-primary"
               >
                 {t("nav.dashboard")}
               </Link>
 
-              <button 
+              <button
                 onClick={logout}
                 className="py-2 px-4 text-left font-medium text-red-500 hover:text-red-600"
               >

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from '@/utils/toast';
 import { validateEmail, isRateLimited } from '@/utils/validation';
 
 interface SubscriptionFormProps {
@@ -11,7 +11,6 @@ interface SubscriptionFormProps {
 const SubscriptionForm: React.FC<SubscriptionFormProps> = ({ className }) => {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,22 +19,14 @@ const SubscriptionForm: React.FC<SubscriptionFormProps> = ({ className }) => {
     try {
       // Client-side rate limiting
       if (isRateLimited('email_subscription', 3, 15 * 60 * 1000)) {
-        toast({
-          title: "Too Many Attempts",
-          description: "Please wait 15 minutes before trying again",
-          variant: "destructive",
-        });
+        toast.error("Too Many Attempts. Please wait 15 minutes before trying again");
         return;
       }
 
       // Enhanced email validation using utility
       const emailValidation = validateEmail(email);
       if (!emailValidation.isValid) {
-        toast({
-          title: "Invalid Email",
-          description: emailValidation.error,
-          variant: "destructive",
-        });
+        toast.error(emailValidation.error || 'Invalid Email');
         return;
       }
 
@@ -49,11 +40,7 @@ const SubscriptionForm: React.FC<SubscriptionFormProps> = ({ className }) => {
 
       if (subscriptionError) {
         if (subscriptionError.code === '23505') { // Unique constraint violation
-          toast({
-            title: "Already Subscribed",
-            description: "This email is already subscribed to our newsletter",
-            variant: "default",
-          });
+          toast.info("This email is already subscribed to our newsletter");
           setEmail('');
           return;
         }
@@ -70,20 +57,12 @@ const SubscriptionForm: React.FC<SubscriptionFormProps> = ({ className }) => {
         // Don't throw error for email sending - subscription was successful
       }
 
-      toast({
-        title: "Welcome!",
-        description: "You've successfully subscribed to our newsletter. Check your email for a welcome message!",
-        variant: "default",
-      });
+      toast.success("You've successfully subscribed to our newsletter. Check your email for a welcome message!");
 
       setEmail('');
     } catch (error: any) {
       console.error('Subscription error:', error);
-      toast({
-        title: "Subscription Failed",
-        description: error.message || "An error occurred while subscribing",
-        variant: "destructive",
-      });
+      toast.error(error.message || "An error occurred while subscribing");
     } finally {
       setIsLoading(false);
     }
@@ -91,16 +70,16 @@ const SubscriptionForm: React.FC<SubscriptionFormProps> = ({ className }) => {
 
   return (
     <form onSubmit={handleSubscribe} className={`flex flex-col space-y-2 ${className || ''}`}>
-      <input 
-        type="email" 
-        placeholder="Your email" 
+      <input
+        type="email"
+        placeholder="Your email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         className="rounded-md border-border bg-background px-3 py-2 text-sm"
         disabled={isLoading}
       />
-      <Button 
-        type="submit" 
+      <Button
+        type="submit"
         className="btn-primary"
         disabled={isLoading}
       >

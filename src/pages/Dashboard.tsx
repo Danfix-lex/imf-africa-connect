@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
@@ -6,45 +5,27 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, User, Users, Clock, Bell, Settings, Plus, PenSquare, Video, Home, Radio, Crown, DollarSign } from "lucide-react";
+import { Calendar, User, Users, Clock, Bell, Settings, Plus, PenSquare, Video, Home, Radio, Crown, DollarSign, UserPlus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import LiveStream from "@/components/LiveStream";
 import ProgramCard from "@/components/ProgramCard";
-
-// Custom UserPlus icon component that accepts className and size props
-const UserPlus = ({ className, size = 24 }: { className?: string; size?: number }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-    <circle cx="9" cy="7" r="4" />
-    <line x1="19" x2="19" y1="8" y2="14" />
-    <line x1="22" x2="16" y1="11" y2="11" />
-  </svg>
-);
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, isLoading } = useAuth();
-  
+
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       navigate("/auth");
     }
   }, [isAuthenticated, isLoading, navigate]);
-  
+
   const isAdmin = user?.role === "admin";
-  
+
   const myUpcomingPrograms = [
     {
       id: "1",
@@ -67,7 +48,7 @@ const Dashboard = () => {
       speaker: "Dr. Samuel Adeyemi",
     },
   ];
-  
+
   const savedStreams = [
     {
       id: "1",
@@ -90,7 +71,7 @@ const Dashboard = () => {
       isLive: false,
     },
   ];
-  
+
   const notifications = [
     {
       id: "1",
@@ -114,7 +95,7 @@ const Dashboard = () => {
       read: true,
     },
   ];
-  
+
   const adminUsers = [
     {
       id: "1",
@@ -141,7 +122,7 @@ const Dashboard = () => {
       lastActive: "2023-06-11",
     },
   ];
-  
+
   if (isLoading) {
     return (
       <Layout>
@@ -154,7 +135,7 @@ const Dashboard = () => {
       </Layout>
     );
   }
-  
+
   return (
     <Layout>
       <div className="max-w-7xl mx-auto">
@@ -162,12 +143,12 @@ const Dashboard = () => {
           <div>
             <h1 className="text-3xl font-bold mb-2">Welcome, {user?.email?.split('@')[0] || 'User'}!</h1>
             <p className="text-muted-foreground">
-              {isAdmin 
-                ? "Manage your platform, users, and content from your admin dashboard." 
+              {isAdmin
+                ? "Manage your platform, users, and content from your admin dashboard."
                 : "Manage your IMF Africa account, programs, and streams from your dashboard."}
             </p>
           </div>
-          
+
           {isAdmin && (
             <div className="mt-4 md:mt-0 flex space-x-3">
               <Button className="btn-primary">
@@ -181,7 +162,7 @@ const Dashboard = () => {
             </div>
           )}
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card className="animate-fade-in" style={{ animationDelay: "0.1s" }}>
             <CardHeader className="pb-2">
@@ -191,7 +172,7 @@ const Dashboard = () => {
               <p className="text-2xl font-bold">{myUpcomingPrograms.length}</p>
             </CardContent>
           </Card>
-          
+
           <Card className="animate-fade-in" style={{ animationDelay: "0.2s" }}>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Saved Streams</CardTitle>
@@ -200,7 +181,7 @@ const Dashboard = () => {
               <p className="text-2xl font-bold">{savedStreams.length}</p>
             </CardContent>
           </Card>
-          
+
           <Card className="animate-fade-in" style={{ animationDelay: "0.3s" }}>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Notifications</CardTitle>
@@ -209,7 +190,7 @@ const Dashboard = () => {
               <p className="text-2xl font-bold">{notifications.filter(n => !n.read).length}</p>
             </CardContent>
           </Card>
-          
+
           {isAdmin && (
             <Card className="animate-fade-in" style={{ animationDelay: "0.4s" }}>
               <CardHeader className="pb-2">
@@ -221,7 +202,7 @@ const Dashboard = () => {
             </Card>
           )}
         </div>
-        
+
         {/* Dashboard Navigation */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
           <Link to="/home">
@@ -232,7 +213,7 @@ const Dashboard = () => {
               </CardContent>
             </Card>
           </Link>
-          
+
           <Link to="/live-streams">
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
               <CardContent className="flex flex-col items-center p-6">
@@ -241,7 +222,7 @@ const Dashboard = () => {
               </CardContent>
             </Card>
           </Link>
-          
+
           <Link to="/programs">
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
               <CardContent className="flex flex-col items-center p-6">
@@ -250,7 +231,7 @@ const Dashboard = () => {
               </CardContent>
             </Card>
           </Link>
-          
+
           <Link to="/leadership">
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
               <CardContent className="flex flex-col items-center p-6">
@@ -259,7 +240,7 @@ const Dashboard = () => {
               </CardContent>
             </Card>
           </Link>
-          
+
           <Link to="/remittals">
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
               <CardContent className="flex flex-col items-center p-6">
@@ -278,7 +259,7 @@ const Dashboard = () => {
             {isAdmin && <TabsTrigger value="users">Manage Users</TabsTrigger>}
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="programs">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {myUpcomingPrograms.map((program, index) => (
@@ -299,7 +280,7 @@ const Dashboard = () => {
               </Card>
             </div>
           </TabsContent>
-          
+
           <TabsContent value="streams">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {savedStreams.map((stream, index) => (
@@ -320,14 +301,14 @@ const Dashboard = () => {
               </Card>
             </div>
           </TabsContent>
-          
+
           <TabsContent value="notifications">
             <Card>
               <CardContent className="p-6">
                 <div className="space-y-4">
                   {notifications.map((notification, index) => (
-                    <div 
-                      key={notification.id} 
+                    <div
+                      key={notification.id}
                       className={`flex items-start p-4 rounded-lg ${notification.read ? 'bg-card' : 'bg-accent/20'} animate-fade-in`}
                       style={{ animationDelay: `${0.1 + index * 0.1}s` }}
                     >
@@ -354,7 +335,7 @@ const Dashboard = () => {
               </CardContent>
             </Card>
           </TabsContent>
-          
+
           {isAdmin && (
             <TabsContent value="users">
               <Card>
@@ -382,15 +363,15 @@ const Dashboard = () => {
                       </thead>
                       <tbody>
                         {adminUsers.map((user, index) => (
-                          <tr 
-                            key={user.id} 
+                          <tr
+                            key={user.id}
                             className="border-b animate-fade-in"
                             style={{ animationDelay: `${0.1 + index * 0.1}s` }}
                           >
                             <td className="p-3">{user.name}</td>
                             <td className="p-3">{user.email}</td>
                             <td className="p-3">
-                              <Badge 
+                              <Badge
                                 variant={user.role === "admin" ? "default" : "outline"}
                                 className={user.role === "admin" ? "bg-primary" : ""}
                               >
@@ -415,7 +396,7 @@ const Dashboard = () => {
               </Card>
             </TabsContent>
           )}
-          
+
           <TabsContent value="settings">
             <Card>
               <CardHeader>
@@ -436,7 +417,7 @@ const Dashboard = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <h3 className="text-lg font-medium">Password</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -450,7 +431,7 @@ const Dashboard = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <h3 className="text-lg font-medium">Notification Preferences</h3>
                     <div className="flex items-center space-x-2">
@@ -466,7 +447,7 @@ const Dashboard = () => {
                       <Label htmlFor="live-stream-notifications">Live stream notifications</Label>
                     </div>
                   </div>
-                  
+
                   <Button className="btn-primary">Save Changes</Button>
                 </div>
               </CardContent>
@@ -477,22 +458,4 @@ const Dashboard = () => {
     </Layout>
   );
 };
-
-const Label = ({ htmlFor, children }: { htmlFor: string, children: React.ReactNode }) => (
-  <label htmlFor={htmlFor} className="text-sm font-medium">{children}</label>
-);
-
-const Input = ({ id, type = "text", defaultValue, className }: { id: string, type?: string, defaultValue?: string, className?: string }) => (
-  <input
-    id={id}
-    type={type}
-    defaultValue={defaultValue}
-    className={`w-full rounded-md border border-input bg-background px-3 py-2 text-sm ${className || ""}`}
-  />
-);
-
-const Checkbox = ({ id }: { id: string }) => (
-  <input type="checkbox" id={id} className="rounded border-border" />
-);
-
 export default Dashboard;

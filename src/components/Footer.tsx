@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Facebook, Twitter, Instagram, Youtube, Mail, MapPin, Phone } from "lucide-react";
@@ -6,18 +5,17 @@ import SubscriptionForm from "./SubscriptionForm";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  
+
   return (
     <footer className="bg-secondary pt-16 pb-8">
       <div className="container-custom">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           <div className="animate-fade-in" style={{ animationDelay: "0.1s" }}>
             <div className="flex items-center space-x-2 mb-4">
-              <span className="text-2xl font-bold text-primary">IMF</span>
-              <span className="font-medium text-lg">Africa</span>
+              <img src="/logo.png" alt="IMF Africa Logo" className="h-8 w-auto" />
             </div>
             <p className="text-muted-foreground mb-4">
-              International Ministers Forum Africa serves as a platform for ministers to connect, 
+              International Ministers Forum Africa serves as a platform for ministers to connect,
               share, and grow together in their spiritual journey.
             </p>
             <div className="flex space-x-4">
@@ -35,7 +33,7 @@ const Footer = () => {
               </a>
             </div>
           </div>
-          
+
           <div className="animate-fade-in" style={{ animationDelay: "0.2s" }}>
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
@@ -61,7 +59,7 @@ const Footer = () => {
               </li>
             </ul>
           </div>
-          
+
           <div className="animate-fade-in" style={{ animationDelay: "0.3s" }}>
             <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
             <ul className="space-y-4">
@@ -81,7 +79,7 @@ const Footer = () => {
               </li>
             </ul>
           </div>
-          
+
           <div className="animate-fade-in" style={{ animationDelay: "0.4s" }}>
             <h3 className="text-lg font-semibold mb-4">Subscribe</h3>
             <p className="text-muted-foreground mb-4">
@@ -90,7 +88,7 @@ const Footer = () => {
             <SubscriptionForm />
           </div>
         </div>
-        
+
         <div className="border-t border-border pt-8 text-center text-muted-foreground">
           <p>&copy; {currentYear} International Ministers Forum Africa. All rights reserved.</p>
         </div>
