@@ -313,7 +313,7 @@ const Dashboard = () => {
               <Card className="border-dashed border-2 flex items-center justify-center h-full animate-fade-in" style={{ animationDelay: "0.3s" }}>
                 <CardContent className="flex flex-col items-center justify-center py-8">
                   <Button variant="ghost" className="h-20 w-20 rounded-full">
-                    <Plus size={30} />
+                    <Plus className="h-8 w-8" />
                   </Button>
                   <p className="mt-2 text-muted-foreground">Browse More Streams</p>
                 </CardContent>
