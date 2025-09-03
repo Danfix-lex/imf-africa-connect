@@ -17,20 +17,45 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu"; // Import NavigationMenu components
+} from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import ThemeToggle from "./ThemeToggle";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useTranslation } from "react-i18next";
 
 const Navbar = () => {
-  // ... (hooks and state remain the same)
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const { user, profile, logout, isAuthenticated } = useAuth();
+  const location = useLocation();
   const { t } = useTranslation();
 
+  const toggleMenu = () => setIsOpen(!isOpen);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
+
+  const navLinks = [
+    { name: "Home", path: "/home" },
+    { name: "Programs", path: "/programs" },
+    { name: "Live Streams", path: "/live-streams" },
+    { name: "Membership", path: "/membership" },
+    { name: "Prayer Wall", path: "/prayer-requests" },
+  ];
+
   return (
-    <nav /* ... */>
+    <nav className={cn("fixed top-0 left-0 right-0 z-50 transition-all duration-300", scrolled ? "glass py-2 shadow-md" : "bg-transparent py-4")}>
       <div className="container-custom flex items-center justify-between">
-        {/* ... (Logo remains the same) */}
+        <Link to="/home" className="flex items-center space-x-2">
+          <img src="/logo.png" alt="IMF Africa Logo" className="h-8 w-auto" />
+        </Link>
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-8">
@@ -49,49 +74,89 @@ const Navbar = () => {
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
-              <NavigationMenuItem>
-                <Link to="/programs" className={navigationMenuTriggerStyle()}>Programs</Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <Link to="/live-streams" className={navigationMenuTriggerStyle()}>Live Streams</Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <Link to="/membership" className={navigationMenuTriggerStyle()}>Membership</Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <Link to="/prayer-requests" className={navigationMenuTriggerStyle()}>Prayer Wall</Link>
-              </NavigationMenuItem>
+              {navLinks.slice(1).map(link => (
+                <NavigationMenuItem key={link.name}>
+                  <Link to={link.path} className={navigationMenuTriggerStyle()}>{link.name}</Link>
+                </NavigationMenuItem>
+              ))}
             </NavigationMenuList>
           </NavigationMenu>
         </div>
 
-        {/* ... (Right side with Auth buttons remains the same) */}
+        {/* Right side of Navbar - RESTORED */}
+        <div className="hidden md:flex items-center space-x-3">
+          <LanguageSwitcher />
+          <ThemeToggle />
+          {isAuthenticated ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="flex items-center gap-1">
+                  {profile?.display_name || user?.email?.split('@')[0] || 'User'}
+                  <ChevronDown size={16} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem asChild>
+                  <Link to="/dashboard" className="w-full cursor-pointer">{t("nav.dashboard")}</Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={logout} className="cursor-pointer text-red-600">
+                  {t("nav.logout")}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Link to="/auth">
+              <Button className="btn-primary">{t("nav.signIn")}</Button>
+            </Link>
+          )}
+        </div>
+
+        {/* Mobile Menu Button - RESTORED */}
+        <button className="md:hidden text-foreground" onClick={toggleMenu} aria-label="Toggle menu">
+          {isOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
       </div>
-      {/* ... (Mobile Navigation needs to be updated similarly) */}
+
+      {/* Mobile Navigation - RESTORED */}
+      <div className={cn("md:hidden absolute w-full bg-background/95 backdrop-blur-md shadow-lg transition-all duration-300 ease-in-out overflow-hidden", isOpen ? "max-h-screen py-4" : "max-h-0")}>
+        <div className="container-custom flex flex-col space-y-4">
+          {/* Add all links for mobile view */}
+          <Link to="/home" className="py-2 px-4 font-medium hover:text-primary">Home</Link>
+          <Link to="/about" className="py-2 px-4 font-medium hover:text-primary">About Us</Link>
+          <Link to="/beliefs" className="py-2 px-4 font-medium hover:text-primary">Our Beliefs</Link>
+          <Link to="/leadership" className="py-2 px-4 font-medium hover:text-primary">Leadership</Link>
+          {navLinks.slice(1).map(link => (
+             <Link key={link.path} to={link.path} className="py-2 px-4 font-medium hover:text-primary">{link.name}</Link>
+          ))}
+          <div className="py-2 px-4 flex items-center gap-3">
+            <LanguageSwitcher />
+            <ThemeToggle />
+          </div>
+          {/* Mobile Auth Buttons */}
+          {isAuthenticated ? (
+            <>
+              <Link to="/dashboard" className="py-2 px-4 font-medium hover:text-primary">{t("nav.dashboard")}</Link>
+              <button onClick={logout} className="py-2 px-4 text-left font-medium text-red-500 hover:text-red-600">{t("nav.logout")}</button>
+            </>
+          ) : (
+            <Link to="/auth" className="py-2 px-4">
+              <Button className="btn-primary w-full">{t("nav.signIn")}</Button>
+            </Link>
+          )}
+        </div>
+      </div>
     </nav>
   );
 };
 
 // A helper component for the navigation dropdown
-const ListItem = React.forwardRef<
-  React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a"> & { to: string }
->(({ className, title, children, to, ...props }, ref) => {
+const ListItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWithoutRef<"a"> & { to: string }>(({ className, title, children, to, ...props }, ref) => {
   return (
     <li>
-      <Link
-        to={to}
-        ref={ref}
-        className={cn(
-          "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-          className
-        )}
-        {...props}
-      >
+      <Link to={to} ref={ref} className={cn("block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground", className)} {...props}>
         <div className="text-sm font-medium leading-none">{title}</div>
-        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-          {children}
-        </p>
+        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">{children}</p>
       </Link>
     </li>
   );
