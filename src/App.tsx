@@ -14,7 +14,7 @@ import Leadership from "./pages/Leadership";
 import Dashboard from "./pages/Dashboard";
 import Giving from "./pages/Giving";
 import PrayerRequests from "./pages/PrayerRequests";
-import Beliefs from "./pages/Beliefs";
+import Beliefs from "./pages/Beliefs"; // Import the new page
 import About from "./pages/About";
 import Membership from "./pages/Membership";
 import Admin from "./pages/Admin";
@@ -39,7 +39,7 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/giving" element={<Giving />} />
           <Route path="/prayer-requests" element={<PrayerRequests />} />
-          <Route path="/beliefs" element={<Beliefs />} />
+          <Route path="/beliefs" element={<Beliefs />} /> {/* Add the route */}
           <Route path="/about" element={<About />} />
           <Route path="/membership" element={<Membership />} />
           <Route path="/admin" element={<Admin />} />
