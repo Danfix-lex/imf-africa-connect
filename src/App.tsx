@@ -13,6 +13,9 @@ import Programs from "./pages/Programs";
 import Leadership from "./pages/Leadership";
 import Dashboard from "./pages/Dashboard";
 import Remittals from "./pages/Remittals";
+import PrayerRequests from "./pages/PrayerRequests";
+import About from "./pages/About";
+import Membership from "./pages/Membership";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
@@ -34,6 +37,9 @@ const App = () => (
           <Route path="/leadership" element={<Leadership />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/remittals" element={<Remittals />} />
+          <Route path="/prayer-requests" element={<PrayerRequests />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/membership" element={<Membership />} />
           <Route path="/admin" element={<Admin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
