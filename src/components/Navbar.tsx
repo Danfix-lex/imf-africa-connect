@@ -42,8 +42,7 @@ const Navbar = () => {
     setIsOpen(false);
   }, [location.pathname]);
 
-  const navLinks = [
-    { name: "Home", path: "/home" },
+  const mainLinks = [
     { name: "Programs", path: "/programs" },
     { name: "Live Streams", path: "/live-streams" },
     { name: "Membership", path: "/membership" },
@@ -74,8 +73,8 @@ const Navbar = () => {
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
-              {navLinks.slice(1).map(link => (
-                <NavigationMenuItem key={link.name}>
+              {mainLinks.map(link => (
+                <NavigationMenuItem key={link.path}>
                   <Link to={link.path} className={navigationMenuTriggerStyle()}>{link.name}</Link>
                 </NavigationMenuItem>
               ))}
@@ -83,7 +82,7 @@ const Navbar = () => {
           </NavigationMenu>
         </div>
 
-        {/* Right side of Navbar - RESTORED */}
+        {/* Right side of Navbar (Login/Logout, User Menu) - FULLY RESTORED */}
         <div className="hidden md:flex items-center space-x-3">
           <LanguageSwitcher />
           <ThemeToggle />
@@ -112,45 +111,45 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Menu Button - RESTORED */}
+        {/* Mobile Menu Button - FULLY RESTORED */}
         <button className="md:hidden text-foreground" onClick={toggleMenu} aria-label="Toggle menu">
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
-      {/* Mobile Navigation - RESTORED */}
+      {/* Mobile Navigation - FULLY RESTORED */}
       <div className={cn("md:hidden absolute w-full bg-background/95 backdrop-blur-md shadow-lg transition-all duration-300 ease-in-out overflow-hidden", isOpen ? "max-h-screen py-4" : "max-h-0")}>
-        <div className="container-custom flex flex-col space-y-4">
-          {/* Add all links for mobile view */}
-          <Link to="/home" className="py-2 px-4 font-medium hover:text-primary">Home</Link>
-          <Link to="/about" className="py-2 px-4 font-medium hover:text-primary">About Us</Link>
-          <Link to="/beliefs" className="py-2 px-4 font-medium hover:text-primary">Our Beliefs</Link>
-          <Link to="/leadership" className="py-2 px-4 font-medium hover:text-primary">Leadership</Link>
-          {navLinks.slice(1).map(link => (
-             <Link key={link.path} to={link.path} className="py-2 px-4 font-medium hover:text-primary">{link.name}</Link>
+        <div className="container-custom flex flex-col space-y-2">
+          <Link to="/home" className="py-2 px-4 font-medium hover:text-primary rounded-md">Home</Link>
+          <Link to="/about" className="py-2 px-4 font-medium hover:text-primary rounded-md">About Us</Link>
+          <Link to="/beliefs" className="py-2 px-4 font-medium hover:text-primary rounded-md">Our Beliefs</Link>
+          <Link to="/leadership" className="py-2 px-4 font-medium hover:text-primary rounded-md">Leadership</Link>
+          {mainLinks.map(link => (
+             <Link key={link.path} to={link.path} className="py-2 px-4 font-medium hover:text-primary rounded-md">{link.name}</Link>
           ))}
-          <div className="py-2 px-4 flex items-center gap-3">
+          <div className="border-t border-border pt-4 mt-2 flex items-center gap-3 px-4">
             <LanguageSwitcher />
             <ThemeToggle />
           </div>
-          {/* Mobile Auth Buttons */}
-          {isAuthenticated ? (
-            <>
-              <Link to="/dashboard" className="py-2 px-4 font-medium hover:text-primary">{t("nav.dashboard")}</Link>
-              <button onClick={logout} className="py-2 px-4 text-left font-medium text-red-500 hover:text-red-600">{t("nav.logout")}</button>
-            </>
-          ) : (
-            <Link to="/auth" className="py-2 px-4">
-              <Button className="btn-primary w-full">{t("nav.signIn")}</Button>
-            </Link>
-          )}
+          <div className="border-t border-border pt-4 mt-2 px-4">
+            {isAuthenticated ? (
+              <div className="space-y-2">
+                <Link to="/dashboard" className="block py-2 font-medium hover:text-primary">{t("nav.dashboard")}</Link>
+                <button onClick={logout} className="w-full text-left py-2 font-medium text-red-500 hover:text-red-600">{t("nav.logout")}</button>
+              </div>
+            ) : (
+              <Link to="/auth" className="py-2">
+                <Button className="btn-primary w-full">{t("nav.signIn")}</Button>
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </nav>
   );
 };
 
-// A helper component for the navigation dropdown
+// Helper component for navigation dropdown
 const ListItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWithoutRef<"a"> & { to: string }>(({ className, title, children, to, ...props }, ref) => {
   return (
     <li>
