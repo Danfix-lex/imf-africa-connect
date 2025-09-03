@@ -47,6 +47,7 @@ const Navbar = () => {
     { name: "Live Streams", path: "/live-streams" },
     { name: "Membership", path: "/membership" },
     { name: "Prayer Wall", path: "/prayer-requests" },
+    { name: "Giving", path: "/giving" },
   ];
 
   return (

@@ -7,13 +7,14 @@ import { SecurityHeaders } from "./components/security/SecurityHeaders";
 import Welcome from "./pages/Welcome";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
-import AdminAuth from "./pages/AdminAuth"; // Import the new admin auth page
+import AdminAuth from "./pages/AdminAuth";
 import LiveStreams from "./pages/LiveStreams";
 import Programs from "./pages/Programs";
 import Leadership from "./pages/Leadership";
 import Dashboard from "./pages/Dashboard";
-import Remittals from "./pages/Remittals";
+import Giving from "./pages/Giving";
 import PrayerRequests from "./pages/PrayerRequests";
+import Beliefs from "./pages/Beliefs";
 import About from "./pages/About";
 import Membership from "./pages/Membership";
 import Admin from "./pages/Admin";
@@ -31,17 +32,17 @@ const App = () => (
           <Route path="/" element={<Welcome />} />
           <Route path="/home" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
-          <Route path="/admin/login" element={<AdminAuth />} /> {/* Add admin login route */}
+          <Route path="/admin/login" element={<AdminAuth />} />
           <Route path="/live-streams" element={<LiveStreams />} />
           <Route path="/programs" element={<Programs />} />
           <Route path="/leadership" element={<Leadership />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/remittals" element={<Remittals />} />
+          <Route path="/giving" element={<Giving />} />
           <Route path="/prayer-requests" element={<PrayerRequests />} />
+          <Route path="/beliefs" element={<Beliefs />} />
           <Route path="/about" element={<About />} />
           <Route path="/membership" element={<Membership />} />
           <Route path="/admin" element={<Admin />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>

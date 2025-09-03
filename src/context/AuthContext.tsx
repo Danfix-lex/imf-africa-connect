@@ -5,7 +5,7 @@ import type { User, Session, AuthChangeEvent } from '@supabase/supabase-js';
 type Profile = {
   display_name: string | null;
   country: string | null;
-  role: string | null; // Add role to profile
+  role: string | null;
 };
 
 type AuthContextType = {
@@ -14,7 +14,7 @@ type AuthContextType = {
   session: Session | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  isAdmin: boolean; // Add isAdmin for easy access
+  isAdmin: boolean;
   login: (email: string, password: string) => Promise<{ error?: string }>;
   register: (name: string, email: string, password: string, country: string) => Promise<{ error?: string }>;
   logout: () => Promise<void>;
