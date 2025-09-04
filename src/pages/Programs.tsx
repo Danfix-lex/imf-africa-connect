@@ -1,46 +1,73 @@
 // src/pages/Programs.tsx
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Layout from "@/components/Layout";
 import ProgramCard from "@/components/ProgramCard";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 
+// A simple debounce hook to prevent excessive API calls
+const useDebounce = (value: string, delay: number) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
+
 const Programs = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [programs, setPrograms] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const debouncedSearchQuery = useDebounce(searchQuery, 300); // Debounce search query
 
-  useEffect(() => {
-    const fetchPrograms = async () => {
-      const { data, error } = await supabase
-        .from("programs")
-        .select("*, media(file_url)");
-      if (data) {
-        const formattedPrograms = data.map((program) => ({
-          id: program.id,
-          title: program.title,
-          description: program.description,
-          imageUrl: program.media[0]?.file_url
-            ? `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/media/${program.media[0]?.file_url}`
-            : "/placeholder.svg",
-          date: program.date,
-          time: new Date(program.date).toLocaleTimeString(),
-          location: "Online", // This can be updated later
-          speaker: "IMF Africa", // This can be updated later
-        }));
-        setPrograms(formattedPrograms);
-      }
-    };
-    fetchPrograms();
+  const fetchPrograms = useCallback(async (search: string) => {
+    setIsLoading(true);
+    let query = supabase
+      .from("programs")
+      .select("*, media(file_url)");
+
+    // If there is a search query, filter on the server
+    if (search) {
+      query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%`);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.error("Error fetching programs:", error);
+      setPrograms([]);
+    } else if (data) {
+      const formattedPrograms = data.map((program) => ({
+        id: program.id,
+        title: program.title,
+        description: program.description,
+        imageUrl: program.media[0]?.file_url
+          ? `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/media/${program.media[0]?.file_url}`
+          : "/placeholder.svg",
+        date: program.date,
+        time: new Date(program.date).toLocaleTimeString(),
+        location: "Online", // This can be updated later
+        speaker: "IMF Africa", // This can be updated later
+      }));
+      setPrograms(formattedPrograms);
+    }
+    setIsLoading(false);
   }, []);
 
-  // Filter programs based on search query
-  const filteredPrograms = programs.filter(
-    (program) =>
-      program.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      program.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Fetch programs when the debounced search query changes
+  useEffect(() => {
+    fetchPrograms(debouncedSearchQuery);
+  }, [debouncedSearchQuery, fetchPrograms]);
 
   return (
     <Layout>
@@ -62,16 +89,20 @@ const Programs = () => {
             />
             <Input
               className="pl-10"
-              placeholder="Search programs..."
+              placeholder="Search programs by title or description..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
         </div>
-
-        {filteredPrograms.length > 0 ? (
+        
+        {isLoading ? (
+            <div className="text-center py-8">
+                <p className="text-muted-foreground">Searching...</p>
+            </div>
+        ) : programs.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredPrograms.map((program, index) => (
+            {programs.map((program, index) => (
               <ProgramCard
                 key={program.id}
                 {...program}
