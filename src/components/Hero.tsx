@@ -5,7 +5,7 @@ import { ChevronRight, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { useAuth } from "@/context/AuthContext"; // Import useAuth
+import { useAuth } from "@/context/AuthContext"; // 1. Import useAuth
 
 interface HeroProps {
   className?: string;
@@ -13,7 +13,7 @@ interface HeroProps {
 
 const Hero: React.FC<HeroProps> = ({ className }) => {
   const { t } = useTranslation();
-  const { isAuthenticated } = useAuth(); // Get authentication state
+  const { isAuthenticated } = useAuth(); // 2. Get the authentication state
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -109,7 +109,7 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
               </motion.div>
             </Link>
 
-            {/* Conditionally render the button */}
+            {/* 3. Conditionally render the button */}
             {!isAuthenticated && (
               <Link to="/auth">
                 <motion.div
