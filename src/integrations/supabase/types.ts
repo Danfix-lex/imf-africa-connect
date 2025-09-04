@@ -103,6 +103,69 @@ export type Database = {
           },
         ]
       }
+      member_resources: {
+        Row: {
+          created_at: string
+          description: string | null
+          file_size: number | null
+          file_type: string | null
+          file_url: string | null
+          id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          file_size?: number | null
+          file_type?: string | null
+          file_url?: string | null
+          id?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          file_size?: number | null
+          file_type?: string | null
+          file_url?: string | null
+          id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      prayer_requests: {
+        Row: {
+          created_at: string
+          id: string
+          is_answered: boolean
+          is_public: boolean
+          name: string
+          request: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_answered?: boolean
+          is_public?: boolean
+          name: string
+          request: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_answered?: boolean
+          is_public?: boolean
+          name?: string
+          request?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
