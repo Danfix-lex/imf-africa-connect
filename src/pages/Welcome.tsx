@@ -12,7 +12,7 @@ const Welcome = () => {
   useEffect(() => {
     // Key Change: If the user is already logged in, redirect them to the home page.
     if (!isLoading && isAuthenticated) {
-      navigate("/home");
+      navigate("/dashboard");
     }
   }, [isAuthenticated, isLoading, navigate]);
 

@@ -4,14 +4,23 @@ import Layout from "@/components/Layout";
 import Hero from "@/components/Hero";
 import ProgramCard from "@/components/ProgramCard";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/context/AuthContext";
 
 const Index = () => {
   const { t } = useTranslation();
   const [upcomingPrograms, setUpcomingPrograms] = useState<any[]>([]);
+  const { isAuthenticated, isLoading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated, isLoading, navigate]);
 
   useEffect(() => {
     const fetchUpcomingPrograms = async () => {
@@ -39,6 +48,10 @@ const Index = () => {
     };
     fetchUpcomingPrograms();
   }, []);
+
+  if (isLoading || !isAuthenticated) {
+    return <div className="min-h-screen bg-background"></div>;
+  }
 
   return (
     <Layout fullWidth withoutFooter={false}>

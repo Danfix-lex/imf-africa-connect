@@ -5,6 +5,7 @@ import { ChevronRight, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { useAuth } from "@/context/AuthContext"; // Import useAuth
 
 interface HeroProps {
   className?: string;
@@ -12,6 +13,8 @@ interface HeroProps {
 
 const Hero: React.FC<HeroProps> = ({ className }) => {
   const { t } = useTranslation();
+  const { isAuthenticated } = useAuth(); // Get authentication state
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -106,16 +109,19 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
               </motion.div>
             </Link>
 
-            <Link to="/auth">
-              <motion.div
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Button variant="secondary" className="py-6 px-8 text-base font-medium w-full sm:w-auto shadow-lg hover:shadow-xl transition-shadow">
-                  {t("hero.authButton")}
-                </Button>
-              </motion.div>
-            </Link>
+            {/* Conditionally render the button */}
+            {!isAuthenticated && (
+              <Link to="/auth">
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button variant="secondary" className="py-6 px-8 text-base font-medium w-full sm:w-auto shadow-lg hover:shadow-xl transition-shadow">
+                    {t("hero.authButton")}
+                  </Button>
+                </motion.div>
+              </Link>
+            )}
           </motion.div>
           
           <motion.div 
