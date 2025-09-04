@@ -53,7 +53,18 @@ export const ProgramForm = () => {
   }, []);
 
   const onSubmit = async (values: ProgramFormValues) => {
-    const { error } = await supabase.from("programs").insert([values]);
+    // Ensure title is defined
+    if (!values.title) {
+      toast.error("Title is required.");
+      return;
+    }
+    const { error } = await supabase.from("programs").insert({
+      title: values.title,
+      description: values.description || null,
+      date: values.date || null,
+      category_id: values.category_id || null,
+      is_upcoming: values.is_upcoming || false,
+    });
     if (error) {
       toast.error("Failed to create program.");
     } else {

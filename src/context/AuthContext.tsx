@@ -45,7 +45,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           }
           
           const profileData = {
-              ...data,
+              display_name: data.display_name,
+              country: null, // Add missing country property
               role: Array.isArray(data.role) ? (data.role[0]?.role || 'user') : 'user',
           };
           setProfile(profileData);
